@@ -10,7 +10,6 @@
             $this->config = parse_ini_file('config.ini');
             $this->root_path = $_SERVER['DOCUMENT_ROOT'].'/'.$this->config['site_dir'];
             spl_autoload_register(function ($class_name){include 'lib/'.$class_name . '.php';});
-            $this->user = new user();
         }
         
         
