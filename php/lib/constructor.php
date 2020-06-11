@@ -17,6 +17,7 @@
             $page_keywords = '';
             $page_css = '';
             $page_scripts = '';
+            $redirect = '';
             
             $page = $this->kernel_obj->get_current_page($_SERVER['REQUEST_URI']);
             if(empty($page)){
@@ -75,16 +76,39 @@
                             }
                         }
                     }
-                }            
+                }
+                
+                if(!empty($page_data['content_src'])){
+                    $content_state = 0;
+                    if (isset($_GET['id'])){
+                        $content_id = $_GET['id'];
+                        $content = $this->kernel_obj->get_table($page_data['content_src'],"WHERE id='$content_id'");
+                        if(!empty($content)){
+                            $content_state = 1;
+                        }
+                    }
+                    
+                    if($content_state == 0){
+                        if(!empty($page_data['parent_url'])){
+                            $redirect = $page_active;
+                        }else{
+                            $redirect = $page.'_id=1';
+                        }
+                    }else{
+                        $page_title = $content['title'];
+                        $page_description = $content['description'];
+                        $page_keywords = $content['keywords'];
+                    }
+                }
             }
             
             return [
-                'access' => $user_access
                 'title' => $page_title,
                 'description' => $page_description,
                 'keywords' => $page_keywords,
                 'css' => $page_css,
-                'scripts' => $page_scripts
+                'scripts' => $page_scripts,
+                'redirect' => $redirect
                 ];
         }
         
