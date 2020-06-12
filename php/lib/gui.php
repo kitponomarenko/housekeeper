@@ -46,6 +46,7 @@
                 $input_params = '';
                 $input_value = '';
                 $input_placeholder = '';
+                $input_label = '';
                 
                 foreach($params as $param_key => $param_val){
                     if($param_key == 'data'){
@@ -74,6 +75,15 @@
                     $input_params .= 'name="'.$type.'"';
                 }
                 
+                if(!empty($label)){                    
+                    $label_for = '';
+                    if(!empty($params['id'])){
+                        $label_for = 'for="'.$params['id'].'"';
+                    }                    
+                    
+                    $input_label = '<label '.$label_for.'>'.$label.'</label>';
+                }
+                
                 if($validate == 1){
                     $input_params .= 'data-input_validate="1"';
                 }
@@ -81,6 +91,7 @@
                 // constructing chosen input type
                 if($type == 'textarea'){
                     $result = '
+                        '.$input_label.'
                         <textarea '.$input_params.'>'.$input_value.'</textarea>
                     ';
                 }else if($type == 'checkbox'){
@@ -97,6 +108,7 @@
                     }
                     $result = '
                         <div class="input_num">
+                            '.$input_label.'
                             <input type="number" '.$input_params.'>
                             <div>
                                 <button type="button">+</button>
@@ -118,6 +130,7 @@
                 }else if($type == 'password'){
                     $result = '
                         <div class="input_password">
+                            '.$input_label.'
                             <input type="'.$type.'" '.$input_params.'>
                             <div class="password_switch"></div>
                         </div>
@@ -128,23 +141,11 @@
                     }
                     
                     $result = '
+                        '.$input_label.'
                         <input type="'.$type.'" '.$input_params.'>
                     ';
                 }
                 
-                if(!empty($label)){
-                    $input_label = '';
-                    $label_for = '';
-                    if(!empty($params['id'])){
-                        $label_for = 'for="'.$params['id'].'"';
-                    }                    
-                    
-                    $input_label = '<label '.$label_for.'>'.$label.'</label>';
-                                        
-                    if(!empty($input_label)){
-                        $result = ''.$input_label.' '.$result.'';
-                    }
-                }
             }
             return $result;
         }

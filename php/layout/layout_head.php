@@ -11,7 +11,7 @@
         <meta name="author" content="Ponomarenko Nikita">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="theme-color" content="#F45720">
+        <meta name="theme-color" content="#1BF58B">
         
         <link rel="shortcut icon" type="images/png" href="images/favicon/logo.png">
         <link rel="apple-touch-icon" href="images/favicon/apple-touch-icon.png">

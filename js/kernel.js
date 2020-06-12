@@ -24,19 +24,20 @@ function run_method(lib,method,params){
 
 $(document).on('change','input:not([id="password_auth"])', function(){
     validate_input($(this));
-})
+});
 
 $(document).on('change','input[id="password_auth"]', function(){
-    serialize_input($(this));
-})
+    let form = $(this).parents('form')
+    validate_password(form);
+});
 
 $(document).on('click','[name="btn_submit"]', function(){
     serialize_form($(this).parent('form'));
-})
+});
 
 function serialize_input(input){
     input_type = $(input).attr('name');
-        input_src = $(input).data('input_src');
+    input_src = $(input).data('input_src');
     input_id = $(input).attr('id');
     input_validate = $(input).data('input_validate');
     input_required = $(input).prop('required');
@@ -62,10 +63,12 @@ function serialize_form(form){
     form_inputs = $(form).find('input:not([type="button"])');
     form_data = [];
     $.each(form_inputs, function(key, value) {
-        input_data = serialize_input($(value));
-        form_data.push(input_data);
+        if($(value).attr('type') != 'button'){
+            input_data = serialize_input($(value));
+            form_data.push(input_data);
+        }
     })
-    alert(form_data);
+
     return form_data;
 }
 
@@ -76,18 +79,33 @@ function validate_input(input){
     });
 }
 
+function validate_password(form){
+    form_data = serialize_form(form);
+    $.when(run_method('validation','validate_auth',[form_data])).done(function(data){        
+        update_form_errors(data['inputs']);
+    });
+}
+
 function update_input_errors(error,input){
+    let pos_el = input;
+    if($(input).prev('label:not(.checkbox)').length > 0){
+        pos_el = $(input).prev('label:not(.checkbox)');
+    }
     if(error!==''){
-        $(input).prev('.error_bar').remove();
-        $(input).before('<p class="error_bar">'+error+'</p>');
+        $(pos_el).prev('.error_bar').remove();
+        $(pos_el).before('<p class="error_bar">'+error+'</p>');
         $(input).addClass('error_input');
     }else{
-        $(input).prev('.error_bar').remove();
+        $(pos_el).prev('.error_bar').remove();
         $(input).removeClass('error_input');
     }
 }
 
-//----------
+function update_form_errors(data){
+    $.each(data, function(key, value) {
+        update_input_errors(value['error'],$('#'+key+''));
+    });
+}
 
 //----- numeric inputs ------
 function numeric_input_op(btn,action){
@@ -150,6 +168,18 @@ $('.password_switch').click(function(){
     }
 })
 
+
+$(document).on('click','#user_types>.btn_radio', function(){
+    btn_radio($(this));
+    let current_type = $(this).data("user_type");
+    $('#login_auth').data("input_src",current_type);
+    $('#password_auth').data("input_src",current_type);
+});
+
+function btn_radio(btn){
+    $(btn).siblings().removeClass('btn_radio_active');
+    $(btn).addClass('btn_radio_active');
+}
 
 $('[name="btn_roll"]').click(function(){
     if ($(this).data("btn_state") == 0){

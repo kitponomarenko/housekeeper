@@ -107,7 +107,7 @@
             foreach($form as $entity){
                 $entity_check = $this->validate_entity($entity);
                 $valid = $entity_check['valid'];
-                $result[$entity['id']] = $entity_check;
+                $result['inputs'][$entity['id']] = $entity_check;
                 if($entity['id'] == 'login_auth'){                    
                     $user = $entity_check['user'];
                     $login = $entity_check['value'];                    
