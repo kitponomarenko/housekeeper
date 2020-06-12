@@ -111,6 +111,10 @@
                             <div></div>
                         </button>
                     ';
+                }else if($type == 'radio'){
+                    $result = '
+                        <div '.$input_params.'>'.$input_value.'</div>
+                        ';
                 }else if($type == 'password'){
                     $result = '
                         <div class="input_password">
@@ -171,6 +175,17 @@
             $params = []
         ){
             return $this->input('cross',$params);
+        }
+        
+        function btn_radio(
+            $params = [],
+            $active = 0
+        ){
+            $params['class'] = 'btn_radio';
+            if($active == 1){
+                $params['class'] = 'btn_radio btn_radio_active';
+            }
+            return $this->input('radio',$params);
         }
         
         //quick-access function to generate numeric inputs via input function
