@@ -520,14 +520,18 @@ header>a>img{
 }
 
 .data_grid>div>p{
-    width: 50%;
+    width: 60%;
     line-height: var(--lh_tiny);
+    word-wrap: break-word;
+    font-size: var(--fs_tiny);
 }
 
 .data_grid>div>p:first-child{
+    width: 40%;
     max-width: var(--s_tiny);
-    margin: 0 var(--in_basic) 0 0;
+    margin: 0 var(--in_tiny) 0 0;
     color: var(--grey);
+    flex-shrink: 0
 }
 
 .pop_up{
@@ -1028,7 +1032,7 @@ footer{
       
     .content{
         min-height: 60vh;
-        padding: var(--in_medium) var(--in_tiny) 0;
+        padding: var(--in_medium) 0 0;
     }
     
     .block,
