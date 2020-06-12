@@ -9,7 +9,7 @@
             $this->kernel_obj = new kernel();
         }
         
-        //master-function to generate differrent inputs
+
         function input(
             $type = 'text', // type of input to construct, default - 'text'
             $params = [],
@@ -138,7 +138,7 @@
                     $input_label = '<label '.$label_for.'>'.$label.'</label>';
                                         
                     if(!empty($input_label)){
-                        $result = '<div>'.$input_label.' '.$result.'</div>';
+                        $result = ''.$input_label.' '.$result.'';
                     }
                 }
             }
