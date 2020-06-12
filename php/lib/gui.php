@@ -84,9 +84,7 @@
                     $input_label = '<label '.$label_for.'>'.$label.'</label>';
                 }
                 
-                if($validate == 1){
-                    $input_params .= 'data-input_validate="1"';
-                }
+                $input_params .= 'data-input_validate="'.$validate.'"';
                 
                 // constructing chosen input type
                 if($type == 'textarea'){

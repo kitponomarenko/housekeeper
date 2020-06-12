@@ -306,7 +306,7 @@ h2{
 }
 
 h3{
-    font-size: var(--font_size_h3);
+    font-size: var(--fs_h3);
     font-weight: 700;
     margin: 0 0 var(--in_medium);
     line-height: var(--lh_tiny);

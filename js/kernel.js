@@ -35,9 +35,34 @@ $(document).on('change','input[id="password_auth"]', function(){
     validate_password(form);
 });
 
-$(document).on('click','[name="btn_submit"]', function(){
-    serialize_form($(this).parent('form'));
+$(document).on('click','#btn_auth', function(){
+    let params = bake_form($(this));
+    $.when(run_method('user','user_auth',params)).done(function(data){
+        update_form_errors(data['inputs']);
+        if(data['valid'] == 1){
+            $(location).attr('href',data['redirect']);
+        }
+    });
 });
+
+$(document).on('click','#btn_reg', function(){
+    let params = bake_form($(this));
+    $.when(run_method('user','user_reg',params)).done(function(data){
+        update_form_errors(data['inputs']);
+        if(data['valid'] == 1){            
+            $('.content').html(data['message']);
+        }
+    });
+});
+
+function bake_form(btn){
+    let form = $(btn).parents('form');
+    let src = $(form).data("form_src");
+    let form_data = serialize_form(form);
+    let params = [src, form_data];
+    
+    return params;
+}
 
 function serialize_input(input){
     input_type = $(input).attr('name');
@@ -64,7 +89,7 @@ function serialize_input(input){
 }
 
 function serialize_form(form){
-    form_inputs = $(form).find('input:not([type="button"])');
+    form_inputs = $(form).find('input:not([type="button"]):visible, textarea:visible');
     form_data = [];
     $.each(form_inputs, function(key, value) {
         if($(value).attr('type') != 'button'){
@@ -181,16 +206,17 @@ $(document).on('click','#user_types>.btn_radio', function(){
     let current_type = $(this).data("user_type");
     $('#login_auth').data("input_src",current_type);
     $('#password_auth').data("input_src",current_type);
-    $('this').parents('form').data("input_src",current_type);
     let form = $(this).parents('form');
+    $(form).data("form_src",current_type);
     validate_password(form);
 });
 
 $(document).on('click','#user_reg_types>.btn_radio', function(){
     btn_radio($(this));
     let current_type = $(this).data("user_type");
-    $('#login_auth').data("input_src",current_type);
-    $('this').parents('form').data("input_src",current_type);
+    $('#login_reg').data("input_src",current_type);
+    let form = $(this).parents('form');
+    $(form).data("form_src",current_type);
     $('[name="reg_inputs"]').hide(100);
     $('#reg_'+current_type+'').show(200);
 });

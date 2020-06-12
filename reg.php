@@ -1,6 +1,6 @@
 <?php include 'php/layout/layout_head.php';         ?>
 <div class="content">
-    <div class="panel">
+    <div class="panel" id="reg_panel">
         <form data-form_src="tenant">
             <div class="section">
                 <h2>Регистрация</h2>                
@@ -39,7 +39,7 @@
             </div>
             <div class="section">
                 <?php
-                    echo($gui_obj->button(['class'=>'btn_green','name'=>'btn_submit','value'=>'Зарегистрироваться']));
+                    echo($gui_obj->button(['id'=>'btn_reg','class'=>'btn_green','name'=>'btn_submit','value'=>'Зарегистрироваться']));
                     echo($gui_obj->button(['class'=>'btn_border','name'=>'btn_link','value'=>'Войти в аккаунт','data'=>['link'=>'index']]));
                 ?>
             </div>

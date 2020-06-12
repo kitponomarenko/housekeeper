@@ -167,5 +167,21 @@
             return $code;
         }
         
+        function send_mail($mail_to,$subject,$message) {
+            $from = $this->config['mail_sender'];
+            $message_full = '
+                        <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                            <title>'.$subject.'</title>
+                        </head>
+                        <html>
+                        '.$message.'
+                        </html>';
+            $headers  = "Content-type: text/html; charset=utf-8 \r\n";
+            $headers .= "From: $from\r\n";
+            $result = mail($mail_to, $subject, $message_full, $headers);
+            
+            return $result;
+        }
+        
     }
 ?>

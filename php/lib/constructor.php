@@ -75,8 +75,9 @@
                                 $page_scripts .= '<script src="js/'.$script.'.js"></script>';
                             }
                         }
-                    }
-                }
+                    }                   
+                    
+                }            
                 
                 if(!empty($page_data['content_src'])){
                     $content_state = 0;
@@ -87,7 +88,7 @@
                             $content_state = 1;
                         }
                     }
-                    
+
                     if($content_state == 0){
                         if(!empty($page_data['parent_url'])){
                             $redirect = $page_active;
@@ -100,7 +101,11 @@
                         $page_keywords = $content['keywords'];
                     }
                 }
-            }
+                
+            }else{
+                    $access_id = $user_session['role'];
+                    $redirect = $this->kernel_obj->get_table('user', "WHERE id='$access_id'")['tbl_name'];
+                }  
             
             return [
                 'title' => $page_title,

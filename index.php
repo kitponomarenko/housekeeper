@@ -1,8 +1,8 @@
 <?php include 'php/layout/layout_head.php';         ?>
 <div class="content">
     <div class="panel">
-        <form>
-            <div class="section" data-form_src="tenant">
+        <form data-form_src="tenant">
+            <div class="section">
                 <h2>Авторизация</h2>                
                 <p class="txt_tiny">Для использования сервиса необходимо войти в свой аккаунт, а если его еще нет - <a href="reg"><u>зарегистрироваться в системе.</u></a></p>
                 <div class="radio_input" id="user_types">
@@ -23,12 +23,12 @@
             <div class="section">
             <?php            
                 echo($gui_obj->input('email',['id'=>'login_auth', 'placeholder'=>'электронная почта','required'=>'required','data'=>['input_src'=>'tenant']],'логин'));
-                echo($gui_obj->input('password',['id'=>'password_auth','required'=>'required'],'пароль'));                
+                echo($gui_obj->input('password',['id'=>'password_auth','required'=>'required'],'пароль',0));                
             ?>
             </div>                
             <div class="section">
                 <?php
-                    echo($gui_obj->button(['class'=>'btn_green','name'=>'btn_submit','value'=>'Войти']));
+                    echo($gui_obj->button(['id'=>'btn_auth','class'=>'btn_green','name'=>'btn_submit','value'=>'Войти']));
                     echo($gui_obj->button(['class'=>'btn_border','name'=>'btn_link','value'=>'Зарегистрироваться','data'=>['link'=>'reg']]));
                 ?>
             </div>

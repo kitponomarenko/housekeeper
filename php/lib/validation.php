@@ -25,7 +25,7 @@
                     'firstname' => 'Введите корректное имя',
                     'email' => 'Введите корректный адрес эл. почты',
                     'password' => 'Введите корректный пароль',
-                    'login_auth' => 'Пользователь с таким адресом электронной почты не зарегистрирован',
+                    'login_auth' => 'Пользователь с таким адресом электронной почты не зарегистрирован.',
                     'login_reg' => 'Пользователь с таким адресом электронной почты уже зарегистрирован',
                     'companyname' => 'Введите корректное название компании',
                     'reg_num' => 'Введите корректный ИНН компании',
@@ -106,7 +106,8 @@
             ];
             
             return $result;
-        }
+        }  
+       
         
         function validate_auth(
                 $form
@@ -115,21 +116,24 @@
             $error = '';
             $result = [];
             foreach($form as $entity){
-                $entity_check = $this->validate_entity($entity);                
+                $entity_check = $this->validate_entity($entity);            
+                $valid = $entity_check['valid'];
                 $result['inputs'][$entity['id']] = $entity_check;
                 if($entity['id'] == 'login_auth'){                    
                     $user = $entity_check['user'];
+                    $result['user'] = $user;
                     $login = $entity_check['value'];                    
                 }else if($entity['id'] == 'password_auth'){
-                    if($valid == 1){
-                        $password = $entity_check['value'];
+                    $password = $entity_check['value'];                    
+                    if($valid == 1){                       
                         if(password_verify($password, $user['password']) == false){
                             $valid = 0;
-                            $error= $this->error_list['invalid']['password'];
-                        }
+                            $error= $this->error_list['invalid']['password'];                            
+                        }        
+                        $result['inputs'][$entity['id']]['valid'] = $valid;
+                        $result['inputs'][$entity['id']]['error'] = $error;
                     }
-                }
-                $valid = $entity_check['valid'];
+                }                
             }
             
             $result['valid'] = $valid;
