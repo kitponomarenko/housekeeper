@@ -2,8 +2,7 @@
     class gui{
         
         private $kernel_obj;
-        private $dictionary;
-
+        
         function __construct(){
             spl_autoload_register(function ($class_name){include 'lib/'.$class_name . '.php';});
             $this->kernel_obj = new kernel();

@@ -480,9 +480,10 @@ header>a>img{
 
 .content{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
+    flex-wrap: wrap;
     width: 100%;
     height: auto;
     min-height: 100vh;
@@ -501,6 +502,32 @@ header>a>img{
     border-radius: var(--br_basic);
     width: 100%;
     max-width: var(--s_big);
+    margin: var(--in_basic);
+}
+
+.data_grid,
+.data_grid>div{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%
+}
+
+.data_grid>div{
+    flex-direction: row;
+    margin: 0 0 var(--in_basic);    
+}
+
+.data_grid>div>p{
+    width: 50%;
+    line-height: var(--lh_tiny);
+}
+
+.data_grid>div>p:first-child{
+    max-width: var(--s_tiny);
+    margin: 0 var(--in_basic) 0 0;
+    color: var(--grey);
 }
 
 .pop_up{
@@ -622,6 +649,7 @@ form{
     background-color: transparent;
 }
 
+.panel>.section,
 form>.section{
     width: 100%;
     margin: 0 0 var(--in_basic);

@@ -9,4 +9,5 @@
     if(file_exists(dirname(__FILE__).'/page_'.$page['title'].'.php')){include('page_'.$page['title'].'.php');}
     $kernel_obj = new kernel();
     $gui_obj = new gui();
+    $content_obj = new content();
 ?>
