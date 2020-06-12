@@ -3,7 +3,7 @@
         
         public $config; //gives access to config.ini params
         public $root_path; // site full root path
-        public $user_obj
+        public $user_obj;
         
         //initializing base public vars
         function __construct(){
@@ -153,6 +153,18 @@
                 $page='index';
             }
             return($page);
+        }
+        
+        function generate_code(
+            $length = 10,
+            $char_set='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            ){
+            $code = '';
+            $max_count = mb_strlen($char_set, '8bit') - 1;
+            for ($i = 0; $i < $length; ++$i) {
+                $code .= $char_set[random_int(0, $max_count)];
+            }
+            return $code;
         }
         
     }

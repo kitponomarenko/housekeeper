@@ -19,7 +19,6 @@
         <link rel="apple-touch-icon" sizes="114x114" href="images/favicon/apple-touch-icon-114x114.png">
 
         <link rel="stylesheet" href="css/core.css">
-        <link rel="stylesheet" href="css/index.css">
         <?php echo($page['css'])?>
     </head>
     <body>

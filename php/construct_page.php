@@ -6,5 +6,5 @@
         header('Location:'.$page['redirect']);
         exit;
     }
-    if(file_exists(dirname(__FILE__).'/page_'.$page.'.php')){include('page_'.$page.'.php');}
+    if(file_exists(dirname(__FILE__).'/page_'.$page['title'].'.php')){include('page_'.$page['title'].'.php');}
 ?>

@@ -7,7 +7,6 @@
         function __construct(){
             spl_autoload_register(function ($class_name){include 'lib/'.$class_name . '.php';});
             $this->kernel_obj = new kernel();
-            $this->dictionary = $this->kernel_obj->get_table_array('txt_dictionary');
         }
         
         //master-function to generate differrent inputs
@@ -71,6 +70,10 @@
                     }
                 }
                 
+                if(empty($params['name'])){
+                    $input_params .= 'name="'.$type.'"';
+                }
+                
                 if($validate == 1){
                     $input_params .= 'data-input_validate="1"';
                 }
@@ -130,17 +133,10 @@
                     $label_for = '';
                     if(!empty($params['id'])){
                         $label_for = 'for="'.$params['id'].'"';
-                    }
-                    if($label == 'auto'){ 
-                        if(!empty($this->dictionary['label_'.$type])){
-                            $input_label = '<label>'.$this->dictionary['label_'.$type].'</label>';
-                        }
-                    }else{
-                        if(!empty($this->dictionary[$label])){
-                            $input_label = '<label '.$label_for.'>'.$this->dictionary[$label].'</label>';
-                        }
-                    }
+                    }                    
                     
+                    $input_label = '<label '.$label_for.'>'.$label.'</label>';
+                                        
                     if(!empty($input_label)){
                         $result = '<div>'.$input_label.' '.$result.'</div>';
                     }

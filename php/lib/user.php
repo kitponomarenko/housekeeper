@@ -26,13 +26,13 @@
             $token_cookie = $this->kernel_obj->config['site_prefix'].'_cookie_token';
             $role_cookie = $this->kernel_obj->config['site_prefix'].'_cookie_role';
             
-            if(isset($_COOKIE[$session_cookie])){
+            if(isset($_COOKIE[$token_cookie])){
                 $user_token = $_COOKIE[$token_cookie];
-                ++$cookies_set
+                ++$cookies_set;
             }
             if(isset($_COOKIE[$role_cookie])){
                 $user_role = $_COOKIE[$role_cookie];
-                ++$cookies_set
+                ++$cookies_set;
             }
             
             if($cookies_set == 2){
@@ -63,7 +63,7 @@
         {
             $result = false;
             
-            if($access != 0){
+            if($page_access != 0){
                 $access_arr = explode('#', $page_access);
                 foreach ($access_arr as $arr_el){
                     if($arr_el == $user_role){
