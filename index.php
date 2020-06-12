@@ -2,9 +2,9 @@
 <div class="content">
     <div class="panel">
         <form>
-            <div class="section">
+            <div class="section" data-form_src="tenant">
                 <h2>Авторизация</h2>                
-                <p class="txt_tiny">Для использования сервиса необходимо войти в свой аккаунт, а если его еще нет - зарегистрироваться в системе.</p>
+                <p class="txt_tiny">Для использования сервиса необходимо войти в свой аккаунт, а если его еще нет - <a href="reg"><u>зарегистрироваться в системе.</u></a></p>
                 <div class="radio_input" id="user_types">
                     <?php
                         $user_types = '';
@@ -25,12 +25,12 @@
                 echo($gui_obj->input('email',['id'=>'login_auth', 'placeholder'=>'электронная почта','required'=>'required','data'=>['input_src'=>'tenant']],'логин'));
                 echo($gui_obj->input('password',['id'=>'password_auth','required'=>'required'],'пароль'));                
             ?>
-            </div>
+            </div>                
+            <div class="section">
                 <?php
                     echo($gui_obj->button(['class'=>'btn_green','name'=>'btn_submit','value'=>'Войти']));
-                    echo($gui_obj->button(['class'=>'btn_border','name'=>'btn_link','value'=>'Зарегистрироваться']));
+                    echo($gui_obj->button(['class'=>'btn_border','name'=>'btn_link','value'=>'Зарегистрироваться','data'=>['link'=>'reg']]));
                 ?>
-            <div class="section">
             </div>
         </form>
     </div>

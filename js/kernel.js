@@ -15,7 +15,7 @@ function run_method(lib,method,params){
         },
         dataType: 'json',
         success: function(data){}
-    })
+    });
 }
 
 //----- INPUTS BLOCK -----
@@ -27,7 +27,7 @@ $(document).on('change','input:not([id="password_auth"])', function(){
 });
 
 $(document).on('change','input[id="password_auth"]', function(){
-    let form = $(this).parents('form')
+    let form = $(this).parents('form');
     validate_password(form);
 });
 
@@ -67,7 +67,7 @@ function serialize_form(form){
             input_data = serialize_input($(value));
             form_data.push(input_data);
         }
-    })
+    });
 
     return form_data;
 }
@@ -152,9 +152,9 @@ $(document).on('change','.input_counter>input', function(){
     let max = parseFloat($(this).attr('max'));
     let val = parseFloat($(this).val());
     if((val ==='') || (val < min)){
-        $(this).val(min)
+        $(this).val(min);
     }else if(val > max){
-        $(this).val(max)
+        $(this).val(max);
     }
 });
 
@@ -166,14 +166,29 @@ $('.password_switch').click(function(){
         $(this).addClass('password_shown');
         $(this).prev('input').attr('type','text');
     }
-})
+});
 
+$(document).on('click','[name="btn_link"]', function(){
+    $(location).attr('href',$(this).data("link"));
+});
 
 $(document).on('click','#user_types>.btn_radio', function(){
     btn_radio($(this));
     let current_type = $(this).data("user_type");
     $('#login_auth').data("input_src",current_type);
     $('#password_auth').data("input_src",current_type);
+    $('this').parents('form').data("input_src",current_type);
+    let form = $(this).parents('form');
+    validate_password(form);
+});
+
+$(document).on('click','#user_reg_types>.btn_radio', function(){
+    btn_radio($(this));
+    let current_type = $(this).data("user_type");
+    $('#login_auth').data("input_src",current_type);
+    $('this').parents('form').data("input_src",current_type);
+    $('[name="reg_inputs"]').hide(100);
+    $('#reg_'+current_type+'').show(200);
 });
 
 function btn_radio(btn){

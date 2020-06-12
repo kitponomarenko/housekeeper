@@ -36,9 +36,10 @@
             $result = [];
             $type = $entity['type'];
             $value = $entity['value'];
+            $user = '';
             
             
-            if ((empty($value)) && ($entity['required'] == true)){
+            if ((empty($value)) && ($entity['required'] == 'true')){
                 $valid = 0;
                 $error= $this->error_list['empty'][$type];
             }
@@ -77,7 +78,7 @@
                             $valid = 0;
                             $error= $this->error_list['empty'][$login_type];
                         }else{
-                            $result['user'] = $login_check;
+                            $user = $login_check;
                         }
                     }
                 }else if($login_type == 'login_reg'){
@@ -92,7 +93,8 @@
             $result = [
                 'valid' => $valid,
                 'error' => $error,
-                'value' => $value                
+                'value' => $value,
+                'user' => $user
             ];
             
             return $result;
@@ -105,8 +107,7 @@
             $error = '';
             $result = [];
             foreach($form as $entity){
-                $entity_check = $this->validate_entity($entity);
-                $valid = $entity_check['valid'];
+                $entity_check = $this->validate_entity($entity);                
                 $result['inputs'][$entity['id']] = $entity_check;
                 if($entity['id'] == 'login_auth'){                    
                     $user = $entity_check['user'];
@@ -120,6 +121,7 @@
                         }
                     }
                 }
+                $valid = $entity_check['valid'];
             }
             
             $result['valid'] = $valid;

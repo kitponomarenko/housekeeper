@@ -123,7 +123,7 @@
                             <div></div>
                         </button>
                     ';
-                }else if($type == 'radio'){
+                }else if($type == 'btn_radio'){
                     $result = '
                         <div '.$input_params.'>'.$input_value.'</div>
                         ';
@@ -186,7 +186,7 @@
             if($active == 1){
                 $params['class'] = 'btn_radio btn_radio_active';
             }
-            return $this->input('radio',$params);
+            return $this->input('btn_radio',$params);
         }
         
         //quick-access function to generate numeric inputs via input function
