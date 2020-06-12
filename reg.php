@@ -25,16 +25,16 @@
             ?>
             <div class="section" name="reg_inputs" id="reg_tenant">
                 <?php          
-                    echo($gui_obj->input('text',['id'=>'lastname','name'=>'lastname','required'=>'required'],'фамилия'));
-                    echo($gui_obj->input('text',['id'=>'firstname','name'=>'firstname','required'=>'required'],'имя'));
-                    echo($gui_obj->input('text',['id'=>'secondname','name'=>'secondname'],'отчество (если есть)'));
+                    echo($gui_obj->input('text',['id'=>'lastname','name'=>'lastname','required'=>'required','placeholder'=>'Иванов'],'фамилия'));
+                    echo($gui_obj->input('text',['id'=>'firstname','name'=>'firstname','required'=>'required','placeholder'=>'Иван'],'имя'));
+                    echo($gui_obj->input('text',['id'=>'secondname','name'=>'secondname','placeholder'=>'Иванович'],'отчество (если есть)'));
                 ?>
             </div>
             <div class="section" name="reg_inputs" id="reg_company" hidden>
                 <?php      
-                    echo($gui_obj->input('text',['id'=>'company_name','name'=>'company_name','required'=>'required'],'название компании'));
-                    echo($gui_obj->input('text',['id'=>'reg_name','name'=>'reg_name','required'=>'required'],'номер в реестре УК'));
-                    echo($gui_obj->input('text',['id'=>'adress','name'=>'adress'],'адрес компании'));
+                    echo($gui_obj->input('text',['id'=>'companyname','name'=>'companyname','required'=>'required','placeholder'=>'УК "Великолепная"'],'название компании'));
+                    echo($gui_obj->input('text',['id'=>'reg_name','name'=>'reg_num','required'=>'required','placeholder'=>'0123456789'],'ИНН компании'));
+                    echo($gui_obj->textarea(['id'=>'adress','name'=>'adress','required'=>'required','placeholder'=>'г. Оренбург, ул. Старая, д. 5'],'адрес компании'));
                 ?>
             </div>
             <div class="section">

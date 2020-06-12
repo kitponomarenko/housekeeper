@@ -243,6 +243,7 @@
     
     /*size*/
     --s_basic: 48px;
+    --s_simple: 96px;
     --s_tiny: 128px;
     --s_small: 256px;
     --s_medium: 320px;
@@ -630,7 +631,7 @@ form label:not(.checkbox){
     font-size: var(--fs_tiny);
     font-weight: 400;
     padding: 0 2px;
-    margin: 0 0 4px 16px;
+    margin: 0 0 0 16px;
     position: relative;
     bottom: -8px;
     background-color: var(--white);
@@ -663,8 +664,9 @@ input:focus{
 
 textarea{
     height: auto;
-    min-height: 96px;
+    min-height: var(--s_simple);
     resize: vertical;
+    padding: var(--in_basic);
 }
 
 .btn_border,

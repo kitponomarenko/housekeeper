@@ -26,6 +26,10 @@ $(document).on('change','input:not([id="password_auth"])', function(){
     validate_input($(this));
 });
 
+$(document).on('change','textarea', function(){
+    validate_input($(this));
+});
+
 $(document).on('change','input[id="password_auth"]', function(){
     let form = $(this).parents('form');
     validate_password(form);
