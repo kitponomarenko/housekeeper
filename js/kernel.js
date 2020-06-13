@@ -196,3 +196,32 @@ $("#house_search").keyup(function() {
         $('#house_search_reciever').html('');
     }
 });
+
+$(document).on('click','[name="btn_choose_house"]', function(){
+    let house_id = $('#house_panel').data("house_id");
+    $.when(run_method('content','add_house',[house_id])).done(function(data){      
+        if(data['result'] == 1){
+            $('#house_panel').html(data['message']);
+        }
+    });
+});
+
+$(document).on('click','[name="btn_remove_house"]', function(){
+    let house_id = $('#house_panel').data("house_id");
+    $.when(run_method('content','remove_house',[house_id])).done(function(data){      
+        if(data['result'] == 1){
+            $('#house_panel').html(data['message']);
+        }
+    });
+});
+
+$(document).on('click','[name="btn_restore_house"]', function(){
+    let house_id = $('#house_panel').data("house_id");
+    let house_controls = $('#house_panel').data("house_controls");
+    $.when(run_method('content','restore_house',[house_id,'',house_controls])).done(function(data){      
+        if(data['result'] == 1){
+            $('#house_panel').html(data['house_data']);
+            $("html,body").scrollTop($('#house_panel').offset().top);
+        }
+    });
+});

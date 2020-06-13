@@ -1,11 +1,5 @@
 <?php 
     include 'php/layout/layout_head.php';
-    $tenant_data = $content_obj->get_tenant_data();
-    $tenant_property = $content_obj->get_tenant_property();
-?>
-
-<?php 
-    include 'php/layout/layout_head.php';
     $tenant_id = $content['id'];
     if($content['id'] == $session['user']['id']){
         $self = 1;

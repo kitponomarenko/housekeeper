@@ -1000,74 +1000,10 @@ footer{
         padding: var(--in_basic);
     }
     
-    .row{
-        flex-wrap: wrap;
-    }
-    
-    .row_time > div{
-        width: 128px;
-        margin: 0 32px 16px 0;
-    }
-    
-    .row_btns > button{
-        margin: 0 16px 0 0;
-    }
-    
-    .row_txt > b{
-        margin: 0 16px 0 0;
-    }
-    
-    .error_bar{
-        padding: 8px 8px;
-    }
-    
-    .error_input{
-        border: 1px solid #EFC46E;
-    }
-    
-    .frame{
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: flex-start;
-        position: fixed;
-        top: 72px;
-        left: 8px;
-        max-width: calc(100% - 16px);
-        min-height: 80vh;
-        padding: 24px 16px;
-    }
-    
-    .frame > div:nth-child(2){
-        height: 38px;
-        margin: 16px 0 0;
-    }
-    
-    .pop_up_fader{
-        height: calc(100% + 64px);
-    }
-    
-    .cookie_warn{
-        padding: 16px 8px;
-    }
-    
-    .cookie_warn > p{
-        margin: 0 16px 0 0;
-    }
-    
-    footer > div{
-        margin: 0 0 24px;
-    }
+    .data_cell{
+        padding: var(--in_tiny);
+    }  
 
-    .yt_embed{
-        width: 280px; 
-        height: 160px; 
-        margin: 0 0 24px;
-     }
-    
-    .yt_embed>iframe{
-        width: 280px;
-        height: 160px;
-    }
 }
 
 * [hidden]{
