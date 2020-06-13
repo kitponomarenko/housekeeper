@@ -13,8 +13,7 @@
     </div>
     <div class="panel">
         <h3>Информация</h3>
-        <div class="section" id="house_data"></div>
-        
+        <div class="section" id="house_data"></div>        
     </div>
 </div>
 <?php include('php/layout/layout_foot.php')?>

@@ -132,53 +132,6 @@ function update_form_errors(data){
     });
 }
 
-//----- numeric inputs ------
-function numeric_input_op(btn,action){
-    let num_input = $(btn).parent('div').prev('input');
-    let counter_base_val = parseFloat($(num_input).val());
-    if(isNaN(counter_base_val)){
-        counter_base_val = 0;
-    }
-    let counter_step = parseFloat($(num_input).attr('step'));
-    if(isNaN(counter_step)){
-        counter_step = 1;
-    }
-    if(action == 'plus'){
-        counter_base_val = parseFloat(counter_base_val + counter_step);
-        if(counter_base_val>parseFloat($(num_input).attr('max'))){
-            counter_base_val=parseFloat($(num_input).attr('max'));
-        }
-    }else if(action == 'minus'){
-        counter_base_val = parseFloat(counter_base_val - counter_step);
-        if(counter_base_val<parseFloat($(num_input).attr('min'))){
-            counter_base_val=parseFloat($(num_input).attr('min'));
-        }
-    }
-    counter_base_val = counter_base_val.toFixed(1);
-    
-    $(num_input).val(counter_base_val);
-    $(num_input).trigger('change');
-}
-
-$(document).on('click','.input_num>div>button:contains("-")', function(){
-    numeric_input_op($(this),'minus');    
-});
-
-$(document).on('click','.input_num>div>button:contains("+")', function(){
-    numeric_input_op($(this),'plus');
-});
-
-$(document).on('change','.input_counter>input', function(){
-    let min = parseFloat($(this).attr('min'));
-    let max = parseFloat($(this).attr('max'));
-    let val = parseFloat($(this).val());
-    if((val ==='') || (val < min)){
-        $(this).val(min);
-    }else if(val > max){
-        $(this).val(max);
-    }
-});
-
 $('.password_switch').click(function(){
     if($(this).hasClass('password_shown')){
         $(this).removeClass('password_shown');
@@ -234,7 +187,7 @@ $("#house_search").keyup(function() {
     let needle = $(this).val();
     let length = needle.length;
     
-    if (length > 5){
+    if (length > 2){
         let active = $(this).data("search_active");
         $.when(run_method('content','find_house',[needle,active])).done(function(data){        
             $('#house_search_reciever').html(data);

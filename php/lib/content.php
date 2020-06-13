@@ -34,6 +34,62 @@
             return $result;
         }
         
+        function get_house_data(
+                $house_id
+        ){
+            $result = '';          
+            
+            $house_data = $this->kernel_obj->get_table('house',"WHERE id='$house_id'");
+            
+            $variable_arr = [
+                'area_non_residential' => 'Площадь нежилых помещений',
+                'area_common_property' => 'Площадь общей собственности',
+                'area_land' => 'Площадь земельного участка',
+                'area_basement' => 'Площадь подвальных помещений',
+                'living_quarters_count' => 'Жилых помещений',
+                'unliving_quarters_count' => 'Нежилых помещений',
+                'entrance_count' => 'Подъездов',
+                'floor_count_min' => 'Мин. этажей'
+            ];
+            
+            foreach($variable_arr as $key => $val){
+                if(empty($house_data[$key])){
+                    ${$key} = '';
+                }else{
+                    $status = '';
+                    if(strpos($key, 'area')){
+                        $status = 'кв.м.';
+                    }
+                    ${$key} = '<div><p>'.$val.'</p><p>'.$house_data[$key].' '.$status.'</p></div>';
+                }
+            }
+            $result = '                
+                <div class="data_grid">
+                    <div><p>Адрес</p><p>'.$house_data['adress'].'</p></div>
+                    <div class="divider"></div>
+                    <div><p><b>Общая площадь</b></p><p><b>'.$house_data['area_total'].' кв.м.</b></p></div>
+                    <div class="divider"></div>
+                    <div><p>Площадь жилых помещений</p><p>'.$house_data['area_residential'].' кв.м.</p></div>    
+                    '.$area_non_residential.'
+                    '.$area_common_property.'
+                    '.$area_land.'
+                    '.$area_basement.'
+                    <div class="divider"></div>
+                    <div><p><b>Всего помещений</b></p><p><b>'.$house_data['quarters_count'].'</b></p></div>
+                    '.$living_quarters_count.'
+                    '.$unliving_quarters_count.' 
+                    <div class="divider"></div>
+                    '.$entrance_count.'                
+                    <div><p>Макс. этажей</p><p>'.$house_data['floor_count_max'].'</p></div>
+                    '.$floor_count_min.'
+                    <div class="divider"></div>
+                    <div><p>Аварийное состояние</p><p>'.$house_data['is_alarm'].'</p></div>    
+                </div>
+            ';
+            
+            return $result;
+        }
+        
         function get_company_data(
                 $user_id = ''
         ){
@@ -209,6 +265,8 @@
             
             return $result;
         }
+        
+        
     }
         
 ?>
