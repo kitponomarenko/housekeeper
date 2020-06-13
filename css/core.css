@@ -558,7 +558,8 @@ header>a>img{
     margin: 0;
 }
 
-.data_cell:hover{
+.data_cell:hover,
+.data_cell_active{
     background-color: var(--green);
 }
 
@@ -582,7 +583,7 @@ form label:not(.checkbox){
     font-size: var(--fs_tiny);
     font-weight: 400;
     padding: 0 2px;
-    margin: 0 0 0 16px;
+    margin: 0 0 0 var(--in_basic);
     position: relative;
     bottom: -8px;
     background-color: var(--white);
@@ -980,16 +981,19 @@ footer{
         font-size: 12pt;
     }
     
-    form,
-    .slimBox{
+    form{
         width: 100%;
         margin: 0 0 24px;
     }
     
+    form label:not(.checkbox){
+        margin: 0 0 0 var(--in_tiny);
+        background-color: var(--white);
+    }
+    
     input,
     select{
-        height: 38px;
-        padding: 0 8px;
+        padding: 0 var(--in_tiny);
     }
     
     .panel{

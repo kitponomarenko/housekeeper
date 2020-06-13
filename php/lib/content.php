@@ -13,8 +13,10 @@
         }
         
         function get_tenant_data(
-                $user_id = ''
+                $user_id = '',
+                $self = 0
         ){
+            $tenant_email = '';
             $result = '';
             
             if(empty($user_id)){
@@ -22,12 +24,16 @@
                 $user_id = $_SESSION['id'];
             }
             
+            if($self == 1){
+               $tenant_email = '<div><p>Эл. почта</p><p>'.$tenant_data['email'].'</p></div>';
+            }
+            
             $tenant_data = $this->kernel_obj->get_table('tenant',"WHERE id='$user_id'");
             $result = '
                 <h3>'.$tenant_data['lastname'].' '.$tenant_data['firstname'].' '.$tenant_data['secondname'].'</h3>
                 <div class="data_grid">
                     <div><p>Дата регистрации</p><p>'.$tenant_data['date_reg'].'</p></div>
-                    <div><p>Эл. почта</p><p>'.$tenant_data['email'].'</p></div>
+                    '.$tenant_email.'
                 </div>
             ';
             
@@ -35,13 +41,23 @@
         }
         
         function get_house_data(
-                $house_id
+                $house_id,
+                $addable = 1,
+                $removable = 1
         ){
             $result = '';          
+            $add_btn = '';
             
             $house_data = $this->kernel_obj->get_table('house',"WHERE id='$house_id'");
             
+            if((empty($house_data['company_id'])) && ($addable = 1)){
+                $action_btn = '<div class="section">'.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_choose_house','value'=>'Выбрать этот дом']).'</div>';
+            }else if((!empty($house_data['company_id'])) && ($removable = 1)){
+                $action_btn = '<div class="section">'.$this->gui_obj->button(['class'=>'btn_border','name'=>'btn_choose_house','value'=>'Удалить с аккаунта']).'</div>';
+            }
+            
             $variable_arr = [
+                'company' => 'Управляющая компания',
                 'area_non_residential' => 'Площадь нежилых помещений',
                 'area_common_property' => 'Площадь общей собственности',
                 'area_land' => 'Площадь земельного участка',
@@ -56,43 +72,54 @@
                 if(empty($house_data[$key])){
                     ${$key} = '';
                 }else{
-                    $status = '';
-                    if(strpos($key, 'area')){
-                        $status = 'кв.м.';
-                    }
-                    ${$key} = '<div><p>'.$val.'</p><p>'.$house_data[$key].' '.$status.'</p></div>';
+                    if($key == 'company'){
+                        ${$key} = '<div><p>'.$val.'</p><p><a href="company?id=1"><u>'.$house_data[$key].'</u></a></p></div>';
+                    }else{
+                        $status = '';
+                        if(strpos($key, 'area')){
+                            $status = 'кв.м.';
+                        }
+                        ${$key} = '<div><p>'.$val.'</p><p>'.$house_data[$key].' '.$status.'</p></div>';
+                    }                    
                 }
             }
-            $result = '                
-                <div class="data_grid">
-                    <div><p>Адрес</p><p>'.$house_data['adress'].'</p></div>
-                    <div class="divider"></div>
-                    <div><p><b>Общая площадь</b></p><p><b>'.$house_data['area_total'].' кв.м.</b></p></div>
-                    <div class="divider"></div>
-                    <div><p>Площадь жилых помещений</p><p>'.$house_data['area_residential'].' кв.м.</p></div>    
-                    '.$area_non_residential.'
-                    '.$area_common_property.'
-                    '.$area_land.'
-                    '.$area_basement.'
-                    <div class="divider"></div>
-                    <div><p><b>Всего помещений</b></p><p><b>'.$house_data['quarters_count'].'</b></p></div>
-                    '.$living_quarters_count.'
-                    '.$unliving_quarters_count.' 
-                    <div class="divider"></div>
-                    '.$entrance_count.'                
-                    <div><p>Макс. этажей</p><p>'.$house_data['floor_count_max'].'</p></div>
-                    '.$floor_count_min.'
-                    <div class="divider"></div>
-                    <div><p>Аварийное состояние</p><p>'.$house_data['is_alarm'].'</p></div>    
+            $result = '
+                <h3>Информация о доме</h3>
+                '.$action_btn.'
+                <div class="section"> 
+                    <div class="data_grid">
+                        <div><p>Адрес</p><p>'.$house_data['adress'].'</p></div>
+                        <div class="divider"></div>
+                        <div><p><b>Общая площадь</b></p><p><b>'.$house_data['area_total'].' кв.м.</b></p></div>
+                        <div class="divider"></div>
+                        <div><p>Площадь жилых помещений</p><p>'.$house_data['area_residential'].' кв.м.</p></div>    
+                        '.$area_non_residential.'
+                        '.$area_common_property.'
+                        '.$area_land.'
+                        '.$area_basement.'
+                        <div class="divider"></div>
+                        <div><p><b>Всего помещений</b></p><p><b>'.$house_data['quarters_count'].'</b></p></div>
+                        '.$living_quarters_count.'
+                        '.$unliving_quarters_count.' 
+                        <div class="divider"></div>
+                        '.$entrance_count.'                
+                        <div><p>Макс. этажей</p><p>'.$house_data['floor_count_max'].'</p></div>
+                        '.$floor_count_min.'
+                        <div class="divider"></div>
+                        <div><p>Аварийное состояние</p><p>'.$house_data['is_alarm'].'</p></div>    
+                    </div>
                 </div>
+                '.$action_btn.'
             ';
             
             return $result;
         }
         
         function get_company_data(
-                $user_id = ''
+                $user_id = '',
+                $self = 0
         ){
+            $company_email = '';
             $result = '';
             
             if(empty($user_id)){
@@ -100,12 +127,16 @@
                 $user_id = $_SESSION['id'];
             }
             
+            if($self == 1){
+               $company_email = '<div><p>Эл. почта</p><p>'.$company_data['email'].'</p></div>';
+            }
+            
             $company_data = $this->kernel_obj->get_table('company',"WHERE id='$user_id'");
             $result = '
                 <h3>'.$company_data['companyname'].'</h3>
                 <div class="data_grid">
                     <div><p>Дата регистрации</p><p>'.$company_data['date_reg'].'</p></div>
-                    <div><p>Эл. почта</p><p>'.$company_data['email'].'</p></div>
+                    '.$company_email.'
                     <div><p>ИНН</p><p>'.$company_data['reg_num'].'</p></div>
                     <div><p>Адрес</p><p>'.$company_data['adress'].'</p></div>
                 </div>
@@ -116,7 +147,7 @@
         
         function get_company_houses(
                 $user_id = '',
-                $self = 1
+                $self = 0
         ){
             $result = '';
             
@@ -156,7 +187,9 @@
                 }
             }else{
                 if($self == 1){
-                    $result = $add_house_btn.'<div class="section>'.$result.'</div>';
+                    $result = '<h3>Дома в управлении</h3>'.$add_house_btn.'<div class="section">'.$result.'</div>';
+                }else{
+                    $result = '<h3>Дома в управлении</h3><div class="section">'.$result.'</div>';
                 }
             }
             
@@ -166,7 +199,7 @@
         
         function get_tenant_property(
                 $user_id = '',
-                $self = 1
+                $self = 0
         ){
             $result = '';
             
@@ -266,6 +299,77 @@
             return $result;
         }
         
+        function add_house(
+                $house_id,
+                $company_id = ''
+        ){
+            $result = 1;
+            $message = '';
+            
+            if(empty($company_id)){
+                $this->user_obj->open_session();
+                if($_SESSION['role'] == 2){
+                    $company_id = $_SESSION['id'];
+                }else{
+                    $result = 0;
+                }
+            }
+            
+            $check_house = $this->kernel_obj->get_table('house',"WHERE id='$house_id'");
+            if(!empty($check_house['company_id'])){
+                $result = 0;
+            }else{
+                $query = $this->kernel_obj->new_query('house', ['company_id'=>$company_id], "WHERE id='$house_id'");
+                $message = '
+                    <h3>Дом успешно добавлен!</h3>
+                    <div class="divider"></div>
+                    <p>Дом успешно подключен к вашей компании! Вы можете продолжить добавлять другие дома или перейти к себе в профиль.<br><br> Если вы добавили этот дом случайно - нажмите "отменить".</p>
+                    <div class="divider"></div>
+                    '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_link','value'=>'Перейти в аккаунт','data'=>['link'=>'company']]).'
+                    '.$this->gui_obj->button(['class'=>'btn_border','name'=>'btn_remove_house','value'=>'Отмена']).'
+                ';
+            }
+            
+            return [
+                    'result' => $result,
+                    'message' => $message
+                ];
+        }
+        
+        function remove_house(
+                $house_id,
+                $company_id = ''
+        ){
+            $result = 1;
+            $message = '';
+            
+            if(empty($company_id)){
+                $this->user_obj->open_session();
+                if($_SESSION['role'] == 2){
+                    $company_id = $_SESSION['id'];
+                }else{
+                    $result = 0;
+                }
+            }
+            
+            $check_house = $this->kernel_obj->get_table('house',"WHERE id='$house_id'");
+            if($check_house['company_id'] != $company_id){
+                $result = 0;
+            }else{
+                $this->kernel_obj->new_query('house', ['company_id'=>'NULL'], "WHERE id='$house_id'");
+                $message = '
+                    <h3>Дом успешно удален!</h3>
+                    <div class="divider"></div>
+                    <p>Дом успешно удален с аккаунта вашей компании.</p>
+                    <div class="divider"></div>                    
+                ';
+            }
+            
+            return [
+                    'result' => $result,
+                    'message' => $message
+                ];
+        }
         
     }
         

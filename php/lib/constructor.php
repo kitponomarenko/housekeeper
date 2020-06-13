@@ -17,6 +17,7 @@
             $page_keywords = '';
             $page_css = '';
             $page_scripts = '';
+            $content = '';
             $redirect = '';
             
             $page = $this->kernel_obj->get_current_page($_SERVER['REQUEST_URI']);
@@ -27,6 +28,8 @@
             $page_data = $this->kernel_obj->get_table('page', "WHERE url='$page'");
             $user_session = $this->user_obj->check_session();
             $user_access = $this->user_obj->check_access($user_session['role'],$page_data['access']);
+            $access_id = $user_session['role'];
+            $user_tbl_name = $this->kernel_obj->get_table('user', "WHERE id='$access_id'")['tbl_name'];
             
             if($user_access == true){
                 if(!empty($page_data)){
@@ -80,32 +83,47 @@
                 }            
                 
                 if(!empty($page_data['content_src'])){
-                    $content_state = 0;
-                    if (isset($_GET['id'])){
+                    $content_state = 1;
+                    if(isset($_GET['id'])){
                         $content_id = $_GET['id'];
                         $content = $this->kernel_obj->get_table($page_data['content_src'],"WHERE id='$content_id'");
-                        if(!empty($content)){
-                            $content_state = 1;
-                        }
-                    }
-
-                    if($content_state == 0){
-                        if(!empty($page_data['parent_url'])){
-                            $redirect = $page_active;
-                        }else{
-                            $redirect = $page.'_id=1';
+                        if(empty($content)){
+                            $content_state = 0;
                         }
                     }else{
-                        $page_title = $content['title'];
-                        $page_description = $content['description'];
-                        $page_keywords = $content['keywords'];
+                        $content_state = 0;
                     }
+                    
+                    if($content_state == 0){
+                        if(($page == 'tenant') || ($page == 'company')){
+                            if($user_tbl_name == $page){
+                                $content_state = 1;
+                                $content_id = $user_session['user']['id'];
+                                $content = $this->kernel_obj->get_table($page_data['content_src'],"WHERE id='$content_id'");
+                            }else{
+                                $content_state = 0;
+                                $redirect = $user_tbl_name;
+                            }
+                        }else{
+                           if(!empty($page_data['parent_url'])){
+                                $redirect = $page_active;
+                            }else{
+                                $redirect = $user_tbl_name;
+                            } 
+                        }                    
+                    }else{
+                        if($page_data['meta_inherit'] == 1){
+                            $page_title = $content['title'];
+                            $page_description = $content['description'];
+                            $page_keywords = $content['keywords'];
+                        }
+                    } 
+                    
                 }
                 
-            }else{
-                    $access_id = $user_session['role'];
-                    $redirect = $this->kernel_obj->get_table('user', "WHERE id='$access_id'")['tbl_name'];
-                }  
+            }else{                    
+                $redirect = $user_tbl_name;
+            }  
             
             return [
                 'title' => $page_title,
@@ -113,6 +131,8 @@
                 'keywords' => $page_keywords,
                 'css' => $page_css,
                 'scripts' => $page_scripts,
+                'session' => $user_session, 
+                'content' => $content,
                 'redirect' => $redirect
                 ];
         }
