@@ -100,6 +100,7 @@
                                 $content_state = 1;
                                 $content_id = $user_session['user']['id'];
                                 $content = $this->kernel_obj->get_table($page_data['content_src'],"WHERE id='$content_id'");
+                                $page_title = 'Личный кабинет';
                             }else{
                                 $content_state = 0;
                                 $redirect = $user_tbl_name;
