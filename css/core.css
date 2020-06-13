@@ -328,7 +328,7 @@ li,
 input,
 button,
 textarea{
-    line-height: var(--lh_medium);
+    line-height: var(--lh_basic);
     font-family: var(--f_basic);
     font-size: var(--fs_basic);
     font-weight: 300;
@@ -534,113 +534,32 @@ header>a>img{
     flex-shrink: 0
 }
 
-.pop_up{
-    position: absolute;
-    bottom: 0;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.data_cell{
     width: 100%;
-    height: auto;
-    background-color: transparent;
-}
-
-.pop_up_fader{
-    display: none;
-    position: absolute;
-    width: 100%;
-    height: calc(100% + 128px);
-    background-color: #000000;
-    opacity: 0.7;
-    z-index: 80;
-}
-
-.message{
-    position: fixed;
-    bottom: 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-    max-width: var(--width_max);
-    padding: var(--indent_b);
+    padding: var(--in_basic);
+    border: 2px solid var(--green);
+    border-radius: var(--br_basic);
+    margin: 0 0 var(--in_basic);
     box-sizing: border-box;
-    background-color: var(--main_color);
-    transition: all 0.2s ease-in;
-}
-
-.message[name="close_pop_up"]{
     cursor: pointer;
+    transition: var(--tr_basic);
 }
 
-.message[name="close_pop_up"]:hover{
-    bottom: -16px;
+.data_cell>p:last-child{
+    font-size: var(--fs_tiny);
+    color: var(--grey);
+    margin: 4px 0 0;
 }
 
-.messagebox{
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: var(--width_c);
-    max-width: 100%;
-    height: auto;
-    max-height: var(--width_c);
-    padding: var(--indent_b);
-    background-color: var(--color_f);
-    overflow-y: auto;
-    box-sizing: border-box;
-    z-index: 99;
+.data_cell>p:first-child{
+    font-size: var(--fs_tiny);
+    font-weight: 600;
+    color: var(--soft-black);
+    margin: 0;
 }
 
-.messagebox>div:first-child,
-.messagebox>div:last-child{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: flex-start;
-    width: 100%;
-    margin: 0 0 var(--indent_b);
-}
-
-.messagebox>div:last-child{
-    justify-content: flex-start;
-    margin: var(--indent_b) 0 0;
-}
-
-.wrap{
-    width: 100%;
-}
-
-.data_block{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
-    max-width: 512px;
-    margin: 0 0 16px;
-}
-
-.data_block > div{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
-}
-
-.data_block > div > b{
-    width: 45%;
-    padding: 0 16px 0 0;
-    box-sizing: border-box;
-}
-
-.data_block > div > p{
-    width: 55%;
+.data_cell:hover{
+    background-color: var(--green);
 }
 
 form{

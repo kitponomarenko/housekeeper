@@ -1,7 +1,3 @@
-//----- VARIABLES BLOCK -----
-
-var pop_up_state = 0; // handles state of any pop-up window on the page
-
 //----- REQUEST BLOCK -----
 
 function run_method(lib,method,params){
@@ -165,15 +161,11 @@ function numeric_input_op(btn,action){
 }
 
 $(document).on('click','.input_num>div>button:contains("-")', function(){
-    if(pop_up_state===0){
-        numeric_input_op($(this),'minus');
-    }
+    numeric_input_op($(this),'minus');    
 });
 
 $(document).on('click','.input_num>div>button:contains("+")', function(){
-    if(pop_up_state===0){
-        numeric_input_op($(this),'plus');
-    }
+    numeric_input_op($(this),'plus');
 });
 
 $(document).on('change','.input_counter>input', function(){
@@ -238,44 +230,16 @@ $('[name="btn_roll"]').click(function(){
     }
 });
 
-
-
-//----- POP UP BLOCK -----
-//----- pop up base functions -----
-
-function fetch_pop_up(lib,method,params){
-    $.when(run_method(lib,method,params)).done(function(data){
-        if(data != ''){
-            if(pop_up_state == 0){
-                if(method != 'message'){
-                    $('#pop_up').css('height','100vh');
-                    $('.pop_up_fader').css('top',$('html').scrollTop());
-                    $('.pop_up_fader').fadeIn(200);
-                }
-                $('#pop_up').html(data);
-                $('#pop_up').slideDown(200);
-                $('#pop_up').css('display','flex');
-                $('html').css('overflow','hidden');
-                $('html').css('width','100%');
-                pop_up_state = 1;
-            }
-        }
-    });
-}
-
-function close_pop_up(){
-    if(pop_up_state == 1){
-        $('#pop_up').slideUp(200);
-        $('#pop_up').html('');
-        $('#pop_up').css('height','auto');
-        $('.pop_up_fader').fadeOut(200);
-        $('html').css('overflow','auto');
-        $('html').css('position','static');
-        pop_up_state = 0;
+$("#house_search").keyup(function() {    
+    let needle = $(this).val();
+    let length = needle.length;
+    
+    if (length > 5){
+        let active = $(this).data("search_active");
+        $.when(run_method('content','find_house',[needle,active])).done(function(data){        
+            $('#house_search_reciever').html(data);
+        });
+    } else{
+        $('#house_search_reciever').html('');
     }
-}
-
-//----- pop up stock calls -----
-$('#pop_up').on('click','[name="close_pop_up"]', function(){
-    close_pop_up();
 });

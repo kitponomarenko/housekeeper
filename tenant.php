@@ -1,20 +1,11 @@
 <?php 
     include 'php/layout/layout_head.php';
     $tenant_data = $content_obj->get_tenant_data();
+    $tenant_property = $content_obj->get_tenant_property();
 ?>
 <div class="content">
     <div class="panel">
-        <form data-form_src="tenant">
-            <div class="section">
-                <h3>Квартиры в собственности</h3>                
-                <p class="txt_tiny">Для участия в собраниях собственников необходимо добавить в аккаунт хотя бы одну квартиру.</p>
-            </div>          
-            <div class="section">
-                <?php
-                    echo($gui_obj->button(['id'=>'btn_add_flat','class'=>'btn_green','name'=>'btn_submit','value'=>'+ Добавить квартиру']));
-                ?>
-            </div>
-        </form>
+        <?php echo($tenant_property); ?>
     </div>
     <div class="panel">
         <div class="section">                             
