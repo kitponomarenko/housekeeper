@@ -56,6 +56,9 @@
             $new_query = "";
             $counter = 0;
             foreach($query_array as $query_key => $query_val){
+                if($query_val == '0'){
+                    $query_val = '0';
+                }
                 if(($query_val != '') && ($query_val != NULL)){
                     ++$counter;
                     $query_val = stripslashes($query_val);

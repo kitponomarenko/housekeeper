@@ -10,6 +10,7 @@
                 <?php echo($gui_obj->input('text',['id'=>'house_search','name'=>'house_search','placeholder'=>'название улицы, номер дома и т.п.','data'=>['search_active'=>'1','search_active'=>'1']],'поиск по адресу дома',0)); ?>
             </div>
             <div class="section" id="house_search_reciever"></div>
+            <?php echo($gui_obj->button(['id'=>'btn_logout','class'=>'btn_border','name'=>'btn_link','value'=>'Назад','data'=>['link'=>'tenant']]))?>
         </form>
     </div>
     <div class="panel" id="flat_panel" data-house_controls="0" hidden></div>

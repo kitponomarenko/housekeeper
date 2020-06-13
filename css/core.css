@@ -701,80 +701,38 @@ textarea{
     background-color: var(--green);
 }
 
-button:disabled{
-    background-color: #D0D0D0;
-    border: 1px solid #D0D0D0;
-}
-
-.btn_cross{
-    position: relative;
-    width: 24px;
-    height: 24px;
-    min-height: 24px;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: all 0.2s ease-in;
-    background-color: transparent;
-}
-
-.btn_cross>div{
-    position: absolute;
-    top: 0; 
-    left: 0; 
-    bottom: 0;
-    right: 0;
-    margin: auto;
+.btn_roll{
     width: 100%;
-    height: 1px;
-    background-color: var(--color_a);
-    transform: rotateZ(-45deg);
+    border-bottom: 1px solid var(--blue);
+    position: relative;
+    margin: 0 0 var(--in_medium);
 }
 
-.btn_cross>div:last-child{
-    transform: rotateZ(45deg);
-}
-
-.btn_cross:hover>div{
+.btn_roll>p{
     width: 80%;
-}
-
-.input_num{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: auto;
-    height: auto;
-}
-
-.input_num>div{
-    width: 28px;
-}
-
-.input_num>div>button{
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    text-align: center;
-    font-size: var(--font_size_b);
-    line-height: 28px;
-    background-color: var(--color_a);
-    color: var(--color_g);
-    border: none;
+    font-size: var(--fs_basic);
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease-in;
+    margin: 0
 }
 
-.input_num>div>button:hover{
-    background-color: var(--color_c);
+.btn_roll>div{
+    display: block;
+    width: auto;
+    box-sizing: border-box;
+    padding: 0 8px;
+    border-radius: var(--br_basic);
+    bottom: -8px;
+    right: 0;
+    position: absolute;
+    font-size: var(--fs_tiny);
+    font-weight: 400;
+    background-color: var(--blue);
+    color: var(--white);
 }
 
-.input_num>input{
-    width: 64px;
-    margin: 0;
-    border-radius: 0;
-    border-right: 0;
+.btn_roll+div{
+    margin: 0 0 var(--in_medium);
 }
 
 .input_password{
@@ -814,44 +772,50 @@ button:disabled{
 .checkbox{
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
     align-items: flex-start;
     max-width: var(--width_c);
-    min-height: 56px;
-    padding: 8px;
-    border: 1px solid var(--color_e);
+    min-height: var(--s_basic);
+    padding: 8px var(--in_basic);
+    border: 1px solid var(--grey);
+    border-radius: var(--br_basic);
     box-sizing: border-box;
 }
 
 .checkbox_mark{
+    align-self: center;
     position: relative;
     display: inline-block;
     width: 24px;
     height: 24px;
-    margin: 0 8px 0 0;
+    margin: 0 var(--in_basic) 0 0;
     border: 1px solid #000000;
     cursor: pointer;
     flex-shrink: 0;
+    border-radius: 24px;
 }
 
 .checkbox_label{
     display: inline-block;
     margin: 0;
-	color: #000000;
-	text-align: left;
-	cursor: pointer;
-	line-height: 1.2;
+    color: var(--soft_black);
+    font-size: var(--fs_tiny);
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    line-height: var(--lf_tiny);
 }
 
 .checkbox_input:checked + .checkbox_mark:before {
     content: "";
     position: absolute;
     display: block;
-    top: 2px;
-    right: 2px;
-    bottom: 2px;
-    left: 2px;
+    top: 4px;
+    right: 4px;
+    bottom: 4px;
+    left: 4px;
     border-radius: 16px;
-    background-color: var(--main_color);
+    background-color: var(--green);
     cursor: pointer;
 }
 

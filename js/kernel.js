@@ -171,13 +171,14 @@ function btn_radio(btn){
     $(btn).addClass('btn_radio_active');
 }
 
-$('[name="btn_roll"]').click(function(){
-    if ($(this).data("btn_state") == 0){
-        $(this).html($(this).data("name_alt"));
+$(document).on('click','[name="btn_roll"]',function(){
+    let label = $(this).children('div');
+    if ($(this).data("btn_state") == 0){        
+        $(label).html($(this).data("value_alt"));
         $('#'+$(this).data("roll_id")).show(200);
         $(this).data("btn_state", 1);
     } else{
-        $(this).html($(this).data("name"));
+        $(label).html($(this).data("value"));
         $('#'+$(this).data("roll_id")).hide(200);
         $(this).data("btn_state", 0);
     }
@@ -227,10 +228,27 @@ $(document).on('click','[name="btn_restore_house"]', function(){
 });
 
 $(document).on('click','[name="btn_remove_flat"]', function(){
-    let house_id = $('#flat_panel').data("flat_id");
+    let flat_id = $('#flat_panel').data("flat_id");
     $.when(run_method('content','remove_flat',[flat_id])).done(function(data){      
         if(data['result'] == 1){
             $('#flat_panel').html(data['message']);
+        }
+    });
+});
+
+$(document).on('click','[name="tenant_confirm_cb"]', function(){
+    let tenant_cb = $(this).parents('.checkbox');
+    let cb_state = $(this).prop('checked');
+    let flat_id = $(this).data("flat_id");
+    $.when(run_method('content','confirm_flat',[flat_id,cb_state])).done(function(data){      
+        if(data == 0){            
+            $('#unconfirmed_tenants').append($(tenant_cb));
+            let btn_roll = $('#unconfirmed_tenants').prev('.btn_roll');
+            $('.btn_roll').trigger('click');
+        }else{            
+            $('#confirmed_tenants').append($(tenant_cb));
+            let btn_roll = $('#confirmed_tenants').prev('.btn_roll');
+            $('.btn_roll').trigger('click');
         }
     });
 });

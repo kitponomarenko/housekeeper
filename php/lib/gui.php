@@ -103,17 +103,14 @@
                     $result = '
                         '.$input_label.'
                         <input type="number" '.$input_params.'>
-                    ';
-                }else if($type == 'cross'){
-                    $result = '
-                        <button class="btn_cross" '.$input_params.'>
-                            <div></div>
-                            <div></div>
-                        </button>
-                    ';
+                    ';                
                 }else if($type == 'btn_radio'){
                     $result = '
                         <div '.$input_params.'>'.$input_value.'</div>
+                        ';
+                }else if($type == 'btn_roll'){
+                    $result = '
+                        <div '.$input_params.'><p>'.$input_placeholder.'</p><div>'.$input_value.'</div></div>
                         ';
                 }else if($type == 'password'){
                     $result = '
@@ -152,20 +149,16 @@
             $block_id = '',
             $params = []
         ){
+            $params['value'] = $value;
             $params['name'] = 'btn_roll';
+            $params['class'] = 'btn_roll';
             $params['data']['value'] = $value;
             $params['data']['value_alt'] = $value_alt;
             $params['data']['roll_id'] = $block_id;
             $params['data']['btn_state'] = 0;
-            return $this->input('button',$params);
-        }
-        
-        function btn_cross(
-            $params = []
-        ){
-            return $this->input('cross',$params);
-        }
-        
+            return $this->input('btn_roll',$params);
+        }       
+       
         function btn_radio(
             $params = [],
             $active = 0
@@ -189,8 +182,12 @@
         //quick-access function to generate checkbox via input function
         function checkbox(
             $params = [],
+            $checked = 0,
             $validate = 0
         ){
+            if($checked == 1){
+                $params['checked'] = 'checked';
+            }
             return $this->input('checkbox',$params,'',$validate);
         }
         
@@ -203,59 +200,6 @@
             return $this->input('textarea',$params,$label,$validate);
         }
         
-        
-        function message(
-            string $msg = '',
-            $clickable = 0
-        ){            
-            if($clickable == 0){
-                $button = $this->button(['class'=>'btn_border','name'=>'close_pop_up','value'=>'ок']);
-                $clickable_name = '';
-            }else{
-                $button = '';
-                $clickable_name = 'name="close_pop_up"';
-            }
-            
-            $message = '
-                <div class="message" '.$clickable_name.'>
-                    <p>'.$msg.'</p>
-                    '.$button.'
-                </div>
-            ';
-            
-            return $message;
-        }
-        
-        
-        function messagebox(
-            string $msg = '',
-            $closable = 1,
-            $btns = []
-        ){            
-            if (empty($btns)){
-                $buttons = $this->button(['class'=>'btn_border','name'=>'close_pop_up','value'=>'ок']);
-            }else{
-                foreach($btns as $btn){
-                    $buttons = $this->button(...$btn);
-                }
-            }
-            
-            if($closable == 1){
-                $close_btn = $this->btn_cross(['name'=>'close_pop_up']);
-            }else{
-                $close_btn = '';
-            }
-            
-            $messagebox = '
-                <div class="messagebox">
-                    <div>'.$close_btn.'</div>
-                    <p>'.$msg.'</p>
-                    <div>'.$buttons.'</div>
-                </div>
-            ';
-            
-            return $messagebox;
-        }
     }
 
 ?>
