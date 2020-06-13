@@ -506,7 +506,9 @@ header>a>img{
 }
 
 .data_grid,
-.data_grid>div{
+.data_grid>div,
+.form_row,
+.form_row>div{
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -548,7 +550,7 @@ header>a>img{
 .data_cell>p:last-child{
     font-size: var(--fs_tiny);
     color: var(--grey);
-    margin: 4px 0 0;
+    margin: 8px 0 0;
 }
 
 .data_cell>p:first-child{
@@ -592,6 +594,21 @@ form label:not(.checkbox){
 
 form>.section:last-of-type{
     margin: 0;
+}
+
+.form_row{
+    flex-direction: row;
+}
+
+.form_row>div{
+    justify-content: flex-end;
+    align-self: stretch;
+    width: calc(50% - 8px);
+    margin: 0 8px 0 0;
+}
+
+.form_row>div:last-child{
+    margin: 0 0 0 8px;
 }
 
 input,

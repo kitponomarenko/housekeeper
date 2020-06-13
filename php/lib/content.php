@@ -4,23 +4,31 @@
         private $kernel_obj;
         private $user_obj;
         private $gui_obj;
+        private $valid_obj;
         
         function __construct(){
             spl_autoload_register(function ($class_name){include 'lib/'.$class_name . '.php';});
             $this->kernel_obj = new kernel();
             $this->user_obj = new user();
             $this->gui_obj = new gui();
+            $this->valid_obj = new validation();
         }
         
-        function get_company_id(){            
+        function get_user_id(
+                $role
+        ){            
+            $role_id = [
+                'tenant' => 1,
+                'company' => 2
+            ];
             $this->user_obj->open_session();
-            if($_SESSION['role'] == 2){
-                $company_id = $_SESSION['id'];
+            if($_SESSION['role'] == $role_id[$role]){
+                $user_id = $_SESSION['id'];
             }else{
-                $company_id = '';
+                $user_id = '';
             }
             
-            return $company_id;
+            return $user_id;
         }
         
         function get_tenant_data(
@@ -49,6 +57,37 @@
             
             return $result;
         }
+
+        function get_company_data(
+                $user_id = '',
+                $self = 0
+        ){
+            $company_email = '';
+            $result = '';
+            
+            if(empty($user_id)){
+                $this->user_obj->open_session();
+                $user_id = $_SESSION['id'];
+            }
+            
+            $company_data = $this->kernel_obj->get_table('company',"WHERE id='$user_id'");
+            
+            if($self == 1){
+               $company_email = '<div><p>Эл. почта</p><p>'.$company_data['email'].'</p></div>';
+            }
+            
+            $result = '
+                <h3>'.$company_data['companyname'].'</h3>
+                <div class="data_grid">
+                    <div><p>Дата регистрации</p><p>'.$company_data['date_reg'].'</p></div>
+                    '.$company_email.'
+                    <div><p>ИНН</p><p>'.$company_data['reg_num'].'</p></div>
+                    <div><p>Адрес</p><p>'.$company_data['adress'].'</p></div>
+                </div>
+            ';
+            
+            return $result;
+        }
         
         function get_house_data(
                 $house_id,
@@ -61,7 +100,7 @@
             $bottom_controls = '';
             
             if(empty($cur_company_id)){
-                $cur_company_id = $this->get_company_id();
+                $cur_company_id = $this->get_user_id('company');
             }
             
             $house_data = $this->kernel_obj->get_table('house',"WHERE id='$house_id'");
@@ -145,37 +184,6 @@
             return $result;
         }
         
-        function get_company_data(
-                $user_id = '',
-                $self = 0
-        ){
-            $company_email = '';
-            $result = '';
-            
-            if(empty($user_id)){
-                $this->user_obj->open_session();
-                $user_id = $_SESSION['id'];
-            }
-            
-            $company_data = $this->kernel_obj->get_table('company',"WHERE id='$user_id'");
-            
-            if($self == 1){
-               $company_email = '<div><p>Эл. почта</p><p>'.$company_data['email'].'</p></div>';
-            }
-            
-            $result = '
-                <h3>'.$company_data['companyname'].'</h3>
-                <div class="data_grid">
-                    <div><p>Дата регистрации</p><p>'.$company_data['date_reg'].'</p></div>
-                    '.$company_email.'
-                    <div><p>ИНН</p><p>'.$company_data['reg_num'].'</p></div>
-                    <div><p>Адрес</p><p>'.$company_data['adress'].'</p></div>
-                </div>
-            ';
-            
-            return $result;
-        }
-        
         function get_company_houses(
                 $user_id = '',
                 $self = 0
@@ -235,18 +243,17 @@
             $result = '';
             
             if(empty($user_id)){
-                $this->user_obj->open_session();
-                $user_id = $_SESSION['id'];
+                $user_id = $this->get_user_id('tenant');
             }
             
             $flat_query = $this->kernel_obj->get_table('tenant_property',"WHERE tenant_id='$user_id'",1);
             while($flat_data = mysqli_fetch_array($flat_query)){
                 $house_id = $flat_data['house_id'];
-                $house_adress = $this->kernel_obj->get_table('house',"WHERE id='$flat_data'");
+                $house_adress = $this->kernel_obj->get_table('house',"WHERE id='$house_id'")['adress'];
                 $flat_adress = str_replace('обл. Оренбургская, ', '', $house_adress);
                 $result .= '
                     <div class="data_cell" name="tenant_property" data-property_id="'.$flat_data['id'].'">
-                        <p>квартира №'.$flat_data['num'].'</p>
+                        <p>квартира № '.$flat_data['flat_num'].'</p>
                         <p>'.$flat_adress.'</p>
                     </div>
                 ';
@@ -273,7 +280,9 @@
                 }
             }else{
                 if($self == 1){
-                    $result = $add_property_btn.'<div class="section>'.$result.'</div>';
+                    $result = '<h3>Квартиры в собственности</h3>'.$add_property_btn.'<div class="section">'.$result.'</div>';
+                }else{
+                    $result = '<h3>Квартиры в собственности</h3><div class="section">'.$result.'</div>';
                 }
             }
             
@@ -315,7 +324,7 @@
                 $house_adress = str_replace('обл. Оренбургская, ', '', $house_data['adress']);
                 $house_company = '';
                 if($active == 1){
-                    $company_id = $house_data['id'];
+                    $company_id = $house_data['company_id'];
                     $company_name = $this->kernel_obj->get_table('company',"WHERE id='$company_id'")['companyname'];
                     $house_company = '<p>'.$company_name.'</p>';
                 }
@@ -338,7 +347,7 @@
             $message = '';           
             
             if(empty($company_id)){
-                $company_id = $this->get_company_id();
+                $company_id = $this->get_user_id('company');
             }
             
             $check_house = $this->kernel_obj->get_table('house',"WHERE id='$house_id'");
@@ -370,7 +379,7 @@
             $message = '';
             
             if(empty($company_id)){
-                $company_id = $this->get_company_id();
+                $company_id = $this->get_user_id('company');
             }
             
             $check_house = $this->kernel_obj->get_table('house',"WHERE id='$house_id'");
@@ -402,7 +411,7 @@
             $house_data = '';
             
             if(empty($company_id)){
-                $company_id = $this->get_company_id();
+                $company_id = $this->get_user_id('company');
             }
             
             $this->kernel_obj->new_query('house', ['company_id'=>$company_id], "WHERE id='$house_id'");
@@ -414,6 +423,113 @@
                 ];
         }
         
+        function get_flat_form(
+                $house_id
+        ){
+            $house_data = $this->kernel_obj->get_table('house',"WHERE id='$house_id'");
+            
+            $result = '
+                <h3>Добавление квартиры</h3>                
+                <div class="data_grid">
+                    <div><p>Адрес</p><p>'.$house_data['adress'].'</p></div>
+                </div>
+                <form>
+                    <div class="section"> 
+                        <div class="form_row">
+                            <div>'.$this->gui_obj->input('num',['id'=>'flat_num','name'=>'flat_num','required'=>'required'],'номер').'</div> 
+                            <div> '.$this->gui_obj->input('num',['id'=>'flat_area','name'=>'flat_area','required'=>'required','placeholder'=>'кв.м.'],'площадь').'</div>                  
+                        </div>
+                        '.$this->gui_obj->textarea(['id'=>'title_doc','name'=>'title_doc','required'=>'required','placeholder'=>'например, Свидетельство о праве собственности АА 1234567'],'правоустанавливающий документ').'
+                    </div>
+                    <div class="section">
+                        <p class="txt_tiny">Если у квартиры несколько собственников, укажите свое и общее число долей в собственности.</p>
+                        <div class="form_row">
+                            <div>'.$this->gui_obj->input('num',['id'=>'flat_share','name'=>'flat_share','required'=>'required','value'=>"1"],'ваши доли').'</div>
+                            <div>'.$this->gui_obj->input('num',['id'=>'share_amount','name'=>'share_amount','required'=>'required','value'=>"1"],'всего долей').'</div>
+                        </div>
+                    </div>
+                    <div class="section"> 
+                        '.$this->gui_obj->button(['id'=>'btn_add_property','class'=>'btn_green','name'=>'btn_submit','value'=>'Добавить квартиру']).'
+                    </div>
+                </form>
+            ';
+                    
+            return $result;
+        }
+        
+        function add_flat(
+                $house_id,
+                $form,
+                $tenant_id = ''
+        ){
+            $result = [];
+            $valid = 1;
+            $message = '';
+            $query_arr = [];
+            
+            foreach($form as $entity){
+                $entity_check = $this->valid_obj->validate_entity($entity);                
+                $result['inputs'][$entity['id']] = $entity_check;
+                $query_arr[$entity['type']] = $entity_check['value'];
+                if($valid == 1){
+                    $valid = $entity_check['valid'];
+                }
+            }
+            
+            if($valid == 1){
+                $query_arr['house_id'] = $house_id;
+                if(empty($tenant_id)){
+                    $tenant_id = $this->get_user_id('tenant');
+                }
+                $query_arr['tenant_id'] = $tenant_id;
+ 
+                $add_flat = $this->kernel_obj->new_query('tenant_property',$query_arr);
+                $flat_id = $add_flat['id'];
+                $message = '
+                    <h3>Квартира успешно добавлена!</h3>
+                    <div class="divider"></div>
+                    <p>Квартира успешно добавлена. Как только ваша УК подтвердит подлинность права собственности, вы сможете принимать участие в общих собраниях. Вы также можете сразу добавить еще одну квартиру в этом доме.<br><br>Если вы добавили эту квартиру случайно - нажмите "отменить".</p>
+                    <div class="divider"></div>
+                    '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_repeat_flat','value'=>'Добавить еще квартиру']).'
+                ';
+                $result['message'] = $message;
+            }
+            $result['valid'] = $valid;
+            
+            return $result;
+        }
+        
+        function remove_flat(
+                $flat_id,
+                $tenant_id = ''
+        ){
+            $result = 1;
+            $message = '';
+            
+            if(empty($tenant_id)){
+                $tenant_id = $this->get_user_id('tenant');
+            }
+            
+            $check_flat = $this->kernel_obj->get_table('tenant_property',"WHERE id='$flat_id'");
+            if($check_flat['tenant_id'] != $tenant_id){
+                $result = 0;
+            }else{
+                $this->kernel_obj->remove_row('tenant_property', $flat_id);
+                $message = '
+                    <h3>Квартира успешно удалена!</h3>
+                    <div class="divider"></div>
+                    <p>Квартира успещно удалена с вашего аккаунта.</p>
+                    <div class="divider"></div>
+                    '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_link','value'=>'Вернуться в профиль','data'=>['link'=>'tenant']]).'                    
+                ';
+            }
+            
+            return [
+                    'result' => $result,
+                    'message' => $message
+                ];
+        }
+            
     }
         
 ?>

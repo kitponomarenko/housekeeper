@@ -100,18 +100,9 @@
                         </label>
                     ';
                 }else if($type == 'num'){
-                    if(empty($params['value'])){
-                        $input_params .= 'value="0"';
-                    }
                     $result = '
-                        <div class="input_num">
-                            '.$input_label.'
-                            <input type="number" '.$input_params.'>
-                            <div>
-                                <button type="button">+</button>
-                                <button type="button">-</button>
-                            </div>
-                        </div>
+                        '.$input_label.'
+                        <input type="number" '.$input_params.'>
                     ';
                 }else if($type == 'cross'){
                     $result = '

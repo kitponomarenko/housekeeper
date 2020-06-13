@@ -87,6 +87,13 @@
             ];
         }
         
+        function remove_row(
+                $tbl,
+                $id
+        ){
+            $link = $this->create_link('writer');
+            $result  = mysqli_query($link, "DELETE FROM $tbl WHERE id='$id'");
+        }
         
         //function to set the first letter of the string uppercase
         function set_uppercase(

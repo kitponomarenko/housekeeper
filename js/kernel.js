@@ -225,3 +225,12 @@ $(document).on('click','[name="btn_restore_house"]', function(){
         }
     });
 });
+
+$(document).on('click','[name="btn_remove_flat"]', function(){
+    let house_id = $('#flat_panel').data("flat_id");
+    $.when(run_method('content','remove_flat',[flat_id])).done(function(data){      
+        if(data['result'] == 1){
+            $('#flat_panel').html(data['message']);
+        }
+    });
+});
