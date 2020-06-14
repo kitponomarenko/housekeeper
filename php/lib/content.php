@@ -5,6 +5,7 @@
         private $user_obj;
         private $gui_obj;
         private $valid_obj;
+        private $poll_obj;
         
         function __construct(){
             spl_autoload_register(function ($class_name){include 'lib/'.$class_name . '.php';});
@@ -12,6 +13,7 @@
             $this->user_obj = new user();
             $this->gui_obj = new gui();
             $this->valid_obj = new validation();
+            $this->poll_obj = new poll();
         }
         
         function get_user_id(
@@ -29,42 +31,6 @@
             }
             
             return $user_id;
-        }
-        
-        function calc_vote(
-                $house_id,
-                $tenant_id
-        ){
-                $vote_pt = 0;
-                $pote_pc = 0;
-                $vote_pt_a = 0;
-                $pote_pc_a = 0;
-                
-                $house_data = $this->kernel_obj->get_table('house',"WHERE id='$house_id'");
-                $house_area = $house_data['area_total'];
-                
-                $property_query = $this->kernel_obj->get_table('tenant_property',"WHERE tenant_id='$tenant_id' AND house_id='$house_id'", 1);
-                while($property_data = mysqli_fetch_array($property_query)){
-                    $actual_area = $property_data['flat_area'] * $property_data['flat_share'] / $property_data['share_amount'];
-                    if($property_data['confirm'] == 1){
-                        $vote_pt = round($vote_pt + $actual_area, 2);
-                    }else{
-                        $vote_pt_a = round($vote_pt_a + $actual_area, 2);
-                    }
-                }
-                $vote_pc = floor($vote_pt * 100 / $house_area);
-                $vote_pc_a = floor($vote_pt_a * 100 / $house_area);
-                
-                return [
-                    'actual' => [
-                        'pt' => $vote_pt,
-                        'pc' => $vote_pc
-                    ],
-                    'formal' => [
-                        'pt' => $vote_pt_a,
-                        'pc' => $vote_pc_a
-                    ],
-                ];
         }
         
         function get_tenant_data(
@@ -168,7 +134,7 @@
                 $share = ''.$flat_data['flat_share'].'/'.$flat_data['share_amount'].'';
             }
             
-            $vote = $this->calc_vote($house_id, $tenant_id);
+            $vote = $this->poll_obj->calc_vote($house_id, $tenant_id);
             
             $result = '
                 <h3>Квартира № '.$flat_data['flat_num'].'</h3>
@@ -680,7 +646,7 @@
                     <h3>Управление домом</h3>
                     '.$house_ads.'
                     <div class="section">
-                        '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_link','value'=>'Инициировать собрание','data'=>['link'=>'create_poll']]).'
+                        '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_link','value'=>'Инициировать собрание','data'=>['link'=>'create_poll?id='.$house_id]]).'
                     </div>
                     '.$house_initiatives.'
                     <div class="section">
@@ -708,10 +674,11 @@
             }
             
             $flat_data = $this->kernel_obj->get_table('tenant_property',"WHERE id='$flat_id'");
+            $house_id = $flat_data['house_id'];
             if($flat_data['confirm'] == 1){
                 $house_initiatives = '
                     <div class="section">
-                        '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_link','value'=>'Инициировать собрание','data'=>['link'=>'create_poll']]).'
+                        '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_link','value'=>'Инициировать собрание','data'=>['link'=>'create_poll?id='.$house_id]]).'
                         '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_link','value'=>'Предложить инициативу','data'=>['link'=>'initiative']]).'
                     </div>
                 ';

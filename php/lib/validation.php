@@ -22,7 +22,10 @@
                     'flat_area' => 'Введите площадь квартиры',
                     'flat_share' => 'Укажите свою долю в праве собственности',
                     'share_amount' => 'Укажите общее число долей в праве собственности',
-                    'title_doc' => 'Укажите правоустанавливающий документ'
+                    'title_doc' => 'Укажите правоустанавливающий документ',
+                    'date_start' => 'Укажите дату начала собрания',
+                    'days_amount' => 'Укажите продолжительность собрания в днях',
+                    'poll_title' => 'Укажите тему собрания'
                 ],
                 'invalid' => [
                     'lastname' => 'Введите корректную фамилию',
@@ -39,7 +42,11 @@
                     'flat_area' => 'Введите корректную площадь квартиры',
                     'flat_share' => 'Укажите кореектную долю в праве собственности',
                     'share_amount' => 'Укажите корректное число долей в праве собственности',
-                    'title_doc' => 'Введите корректный правоустанавливающий документ'
+                    'title_doc' => 'Введите корректный правоустанавливающий документ',
+                    'date_start' => 'Укажите дату начала собрания не ранее, чем через 14 дней',
+                    'days_amount' => 'Укажите продолжительность собрания  не менее, чем 7 и не более, чем 16 дней',
+                    'poll_title' => 'Укажите корректную тему собрания',
+                    'poll_description' => 'Укажите корректное описание собрания'
                 ]
             ];
         }
@@ -55,18 +62,16 @@
             $user = '';
             
             
-            if (empty($value)){
+            if ((empty($value)) && ($entity['required'] == 'true')){                
                 $valid = 0;
-                if($entity['required'] == 'true'){
-                    $error= $this->error_list['empty'][$type];
-                }
+                $error= $this->error_list['empty'][$type];
             }
             
             if($valid == 1){
                 $value = stripslashes($value);
                 $value = htmlspecialchars($value);
                 $value = trim($value);
-                if(($type!=null) && ($entity['validate'] == 1)){
+                if(($type!=null) && ($entity['validate'] == 1) && (!empty($value))){
                     if($type=='email'){
                         if(!filter_var($value, FILTER_VALIDATE_EMAIL)){
                             $valid = 0;
@@ -80,6 +85,39 @@
                     if($valid == 0){
                         $error= $this->error_list['invalid'][$type];
                     }
+                }
+            }
+            
+            if($valid == 1){
+                if(stripos($entity['type'], 'date') !== false){
+                    $val_format = strtotime($value);
+                    if(!empty($entity['min'])){
+                        if ($val_format < strtotime($entity['min'])){
+                            $valid = 0;
+                        }
+                    }
+                    
+                    if(!empty($entity['max'])){
+                        if ($val_format > strtotime($entity['max'])){
+                            $valid = 0;
+                        }
+                    }
+                }else{                
+                    if(!empty($entity['min'])){
+                        if ($value < $entity['min']){
+                            $valid = 0;
+                        }
+                    }
+
+                    if(!empty($entity['max'])){
+                        if ($value > $entity['max']){
+                            $valid = 0;
+                        }
+                    }
+                }
+                
+                if($valid == 0){
+                    $error= $this->error_list['invalid'][$type];
                 }
             }
             

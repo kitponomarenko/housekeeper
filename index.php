@@ -3,7 +3,7 @@
     <div class="panel">
         <form data-form_src="tenant">
             <div class="section">
-                <h2>Авторизация</h2>                
+                <h3>Авторизация</h3>                
                 <p class="txt_tiny">Для использования сервиса необходимо войти в свой аккаунт, а если его еще нет - <a href="reg"><u>зарегистрироваться в системе.</u></a></p>
                 <div class="radio_input" id="user_types">
                     <?php

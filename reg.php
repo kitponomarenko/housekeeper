@@ -3,7 +3,7 @@
     <div class="panel" id="reg_panel">
         <form data-form_src="tenant">
             <div class="section">
-                <h2>Регистрация</h2>                
+                <h3>Регистрация</h3>                
                 <p class="txt_tiny">Для использования сервиса необходимо зарегистрироваться в системе, а если аккаунт уже есть - <a href="index"><u>войти в свой аккаунт</u></a></p>
                 <div class="radio_input" id="user_reg_types">
                     <?php

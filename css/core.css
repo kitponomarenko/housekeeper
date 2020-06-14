@@ -526,6 +526,7 @@ header>a>img{
     line-height: var(--lh_tiny);
     word-wrap: break-word;
     font-size: var(--fs_tiny);
+    margin: 0;
 }
 
 .data_grid>div>p:first-child{
@@ -627,7 +628,9 @@ select,
     z-index: 60;
 }
 
-input:focus{
+input:focus,
+select:focus,
+textarea:focus{
     border: 1px solid var(--blue);
 }
 
@@ -706,13 +709,13 @@ textarea{
     border-bottom: 1px solid var(--blue);
     position: relative;
     margin: 0 0 var(--in_medium);
+    cursor: pointer;
 }
 
 .btn_roll>p{
     width: 80%;
     font-size: var(--fs_basic);
-    font-weight: 500;
-    cursor: pointer;
+    font-weight: 500;    
     margin: 0
 }
 

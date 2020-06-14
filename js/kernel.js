@@ -26,6 +26,10 @@ $(document).on('change','textarea', function(){
     validate_input($(this));
 });
 
+$(document).on('change','select', function(){
+    validate_input($(this));
+});
+
 $(document).on('change','input[id="password_auth"]', function(){
     let form = $(this).parents('form');
     validate_password(form);
@@ -70,7 +74,7 @@ function serialize_input(input){
         input_value = $(input).prop('checked');
     }else{
        input_value = $(input).val(); 
-    }
+    }    
     
     input_data = {
         'type' : input_type,
@@ -81,11 +85,19 @@ function serialize_input(input){
         'value' : input_value
     };
     
+    if($(input).attr('min') != undefined){
+        input_data['min'] = $(input).attr('min');
+    }
+    
+    if($(input).attr('max') != undefined){
+        input_data['max'] = $(input).attr('max');
+    }
+    
     return input_data;
 }
 
 function serialize_form(form){
-    form_inputs = $(form).find('input:not([type="button"]):visible, textarea:visible');
+    form_inputs = $(form).find('input:not([type="button"]):visible, textarea:visible, select:visible');
     form_data = [];
     $.each(form_inputs, function(key, value) {
         if($(value).attr('type') != 'button'){

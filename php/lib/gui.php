@@ -120,6 +120,11 @@
                             <div class="password_switch"></div>
                         </div>
                     ';
+                }else if($type == 'select'){
+                    $result = '
+                        '.$input_label.'
+                        <select '.$input_params.'>
+                    ';
                 }else{
                     if($type == 'name'){
                         $type = 'text';
