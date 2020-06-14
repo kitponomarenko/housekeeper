@@ -965,7 +965,7 @@ footer{
     }
        
     .content{
-        min-height: 60vh;
+        min-height: 100vh;
         padding: 64px 0 0;
     }
 
