@@ -369,14 +369,24 @@ header{
 }
 
 header>a{
-    height: 100%;
-    padding: 8px;
     margin: 0;
     box-sizing: border-box;
+    color: var(--soft_black);
+    font-size: 20pt;
+    font-weight: 700;
+    margin: 0;
+    padding: 8px var(--in_basic);
+    letter-spacing: 8pt;
+    line-height: var(--lh_basic);
+    border: 1px solid var(--soft_black);
+    border-radius: var(--br_basic);
+    cursor: pointer;
+    transition: var(--tr_basic);
 }
 
-header>a>img{
-    height: 100%;
+header>a:hover{
+    color: var(--blue);
+    border: 1px solid var(--blue);
 }
 
 .menu_btn{
@@ -900,19 +910,28 @@ footer{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
+    align-items: center;
     width: 100%;
-    height: auto;
     margin: 0 auto;
     box-sizing: border-box;
     background-color: var(--soft_black);    
     max-width: 1024px;
-    min-height: 64px;
-    padding: 4px var(--in_basic);
+    height: 64px;
+    padding: var(--in_medium) var(--in_basic) 0;
     box-sizing: border-box;
     border-radius: var(--br_basic) var(--br_basic) 0 0;
     box-shadow: 0 0 1px rgba(0,0,0,0.8);
+    color: var(--white);
+}
+
+footer>a>u{
+    color: var(--green);
+    border-bottom: 1px dotted var(--green);
+}
+
+footer>a>u:hover{
+    color: var(--green);
+    border-bottom: 1px solid var(--green);
 }
 
 @media all and (max-width: 1023px){
@@ -976,6 +995,11 @@ footer{
     header{
         height: 48px;
         padding: 0 8px;
+    }
+    
+    header>a{
+        padding: 4px 8px;
+        font-size: 18pt;
     }
     
     .menu_panel{
