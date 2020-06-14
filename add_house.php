@@ -1,5 +1,6 @@
 <?php 
     include 'php/layout/layout_head.php';
+    include 'php/layout/layout_header.php';
 ?>
 <div class="content">
     <div class="panel">
@@ -10,8 +11,10 @@
                 <?php echo($gui_obj->input('text',['id'=>'house_search','name'=>'house_search','placeholder'=>'название улицы, номер дома и т.п.','data'=>['search_active'=>'0']],'поиск по адресу дома',0)); ?>
             </div>
             <div class="section" id="house_search_reciever"></div>
+            <?php echo($gui_obj->button(['class'=>'btn_border','name'=>'btn_link','value'=>'Назад','data'=>['link'=>'company']]))?>
         </form>
     </div>
     <div class="panel" id="house_panel" hidden></div>
 </div>
+<?php include('php/layout/layout_footer.php')?>
 <?php include('php/layout/layout_foot.php')?>

@@ -12,6 +12,7 @@
     }
     $company_data = $content_obj->get_company_data($company_id,$self);
     $company_houses = $content_obj->get_company_houses($company_id,$self);
+    include 'php/layout/layout_header.php';
 ?>
 <div class="content">
     <div class="panel">
@@ -24,4 +25,5 @@
         <?php echo($controls) ?>
     </div>
 </div>
+<?php include('php/layout/layout_footer.php')?>
 <?php include('php/layout/layout_foot.php')?>

@@ -138,6 +138,51 @@
                 ];
         }
         
+        function get_menu(
+        ){
+            $menu = '';
+            
+            $page = $this->kernel_obj->get_current_page($_SERVER['REQUEST_URI']);
+            if(empty($page)){
+                $page = 'index';
+            }
+            
+            $arr_user = [
+                '2' => 'company',
+                '1' => 'tenant'
+            ];
+            
+            $arr_mirror = [
+                '1' => 'company',
+                '2' => 'tenant'
+            ];
+            
+            $this->user_obj->open_session();
+            $user_role = $_SESSION['role'];
+            if(isset($_SESSION['role'])){
+                $user_role = $_SESSION['role'];
+            }else{
+                $user_role = 4;
+            }
+            
+            $pages_query = $this->kernel_obj->get_table('page',"WHERE menu='1' AND (access='0' OR access LIKE '%#$user_role#%') ORDER BY priority",1);
+            while($page_data = mysqli_fetch_array($pages_query)){
+                $active_class = '';
+                if($page_data['url'] == $page){
+                    $active_class = 'menu_line_active';                    
+                }
+                if($page_data['url'] != $arr_mirror[$user_role]){                    
+                    $page_title = $page_data['title'];
+                    if($page_data['url'] == $arr_user[$user_role]){
+                        $page_title = 'Личный кабинет';
+                    }
+                    $menu .= '<a href="'.$page_data['url'].'" class="menu_line '.$active_class.'">'.$page_title.'</a>';
+                }    
+            }
+            
+            return $menu;
+        }
+        
     }
 
 ?>

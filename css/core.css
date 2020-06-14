@@ -12,18 +12,6 @@
 
 @font-face {
   font-family: 'IBM Plex Mono';
-  font-style: normal;
-  font-weight: 200;
-  src: local("IBM Plex Mono ExtraLight"), local("IBMPlexMono-ExtraLight"), url("fonts/IBM-Plex-Mono/woff2/IBMPlexMono-ExtraLight.woff2") format("woff2"), url("fonts/IBM-Plex-Mono/woff/IBMPlexMono-ExtraLight.woff") format("woff"); }
-
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: italic;
-  font-weight: 200;
-  src: local("IBM Plex Mono ExtraLight Italic"), local("IBMPlexMono-ExtraLightItalic"), url("fonts/IBM-Plex-Mono/woff2/IBMPlexMono-ExtraLightItalic.woff2") format("woff2"), url("fonts/IBM-Plex-Mono/woff/IBMPlexMono-ExtraLightItalic.woff") format("woff"); }
-
-@font-face {
-  font-family: 'IBM Plex Mono';
   font-style: italic;
   font-weight: 400;
   src: local("IBM Plex Mono Italic"), local("IBMPlexMono-Italic"), url("fonts/IBM-Plex-Mono/woff2/IBMPlexMono-Italic.woff2") format("woff2"), url("fonts/IBM-Plex-Mono/woff/IBMPlexMono-Italic.woff") format("woff"); }
@@ -69,30 +57,6 @@
   font-style: italic;
   font-weight: 600;
   src: local("IBM Plex Mono SemiBold Italic"), local("IBMPlexMono-SemiBoldItalic"), url("fonts/IBM-Plex-Mono/woff2/IBMPlexMono-SemiBoldItalic.woff2") format("woff2"), url("fonts/IBM-Plex-Mono/woff/IBMPlexMono-SemiBoldItalic.woff") format("woff"); }
-
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: normal;
-  font-weight: 450;
-  src: local("IBM Plex Mono Text"), local("IBMPlexMono-Text"), url("fonts/IBM-Plex-Mono/woff2/IBMPlexMono-Text.woff2") format("woff2"), url("fonts/IBM-Plex-Mono/woff/IBMPlexMono-Text.woff") format("woff"); }
-
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: italic;
-  font-weight: 450;
-  src: local("IBM Plex Mono Text Italic"), local("IBMPlexMono-TextItalic"), url("fonts/IBM-Plex-Mono/woff2/IBMPlexMono-TextItalic.woff2") format("woff2"), url("fonts/IBM-Plex-Mono/woff/IBMPlexMono-TextItalic.woff") format("woff"); }
-
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: normal;
-  font-weight: 100;
-  src: local("IBM Plex Mono Thin"), local("IBMPlexMono-Thin"), url("fonts/IBM-Plex-Mono/woff2/IBMPlexMono-Thin.woff2") format("woff2"), url("fonts/IBM-Plex-Mono/woff/IBMPlexMono-Thin.woff") format("woff"); }
-
-@font-face {
-  font-family: 'IBM Plex Mono';
-  font-style: italic;
-  font-weight: 100;
-  src: local("IBM Plex Mono Thin Italic"), local("IBMPlexMono-ThinItalic"), url("fonts/IBM-Plex-Mono/woff2/IBMPlexMono-ThinItalic.woff2") format("woff2"), url("fonts/IBM-Plex-Mono/woff/IBMPlexMono-ThinItalic.woff") format("woff"); }
 
 @font-face {
   font-family: 'IBM Plex Sans';
@@ -355,22 +319,12 @@ pre>*{
     color: var(--blue);
 }
 
-.article{
-    width: 100%;
-    max-width: var(s_large);
-    margin: 0 0 var(--in_big);
-}
-
 b{
     font-weight: 500; 
 }
 
 i{
-    font-style: normal; 
-}
-
-li{
-    margin: 0;
+    font-style: italic; 
 }
 
 a{
@@ -394,7 +348,7 @@ a:hover > u{
 }
 
 header{
-    display: none;
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -403,11 +357,15 @@ header{
     right: 0;
     left: 0;
     width: 100%;
-    max-width: 1280px;
+    max-width: 1024px;
     height: 64px;
     margin: 0 auto;
-    background-color: transparent;
+    padding: 4px var(--in_basic);
+    box-sizing: border-box;
+    background-color: var(--green);
     z-index: 99;
+    border-radius: 0 0 var(--br_basic) var(--br_basic);
+    box-shadow: 0 0 1px rgba(0,0,0,0.8);
 }
 
 header>a{
@@ -428,7 +386,7 @@ header>a>img{
     justify-content: space-between;
     align-items: flex-start;
     width: 56px;
-    height: 64px;
+    height: 56px;
     padding: 16px 8px;
     box-sizing: border-box;
     border: 0;
@@ -436,9 +394,18 @@ header>a>img{
 }
 
 .menu_btn > div{
-    height: 2px;
+    height: 4px;
     width: 100%;
-    background-color: var(--color_a);
+    border-radius: var(--br_basic) var(--br_basic);
+    background-color: var(--soft_black);
+    transition: all 0.2s ease-in;
+}
+
+.menu_btn > div:last-child{
+    height: 4px;
+    width: 70%;
+    border-radius: var(--br_basic) var(--br_basic);
+    background-color: var(--soft_black);
     transition: all 0.2s ease-in;
 }
 
@@ -449,33 +416,36 @@ header>a>img{
     align-items: flex-start;
     position: fixed;
     right: 0;
+    left: 0;
     width: 100%;
+    margin: 0 auto;
+    max-width: 1024px;
     height: 100vh;
     padding: 144px 48px 0;
     box-sizing: border-box;
-    background-color: #ffffff;
+    background-color: var(--green);
     overflow-y: auto;
     z-index: 90;
+    box-sizing: border-box; 
 }
 
 .menu_line,
 .menu_line_active{
-    font-family: noto-sans-disp;
-    font-size: 14pt;
-    font-weight: 400;
-    margin: 0 0 24px;
-    letter-spacing: 1.2pt;
+    font-size: var(--fs_h2);
+    font-weight: 600;
+    margin: 0 0 var(--in_large);
+    background-color: transparent;
+    color: var(--soft_black);
+    transition: var(--tr_basic);
 }
 
 .menu_line_active{
-    padding: 0 32px 0 0;
-    font-weight: 600;
-    border-radius: 2px;
-    background-color: #EFC46E;
+    font-weight: 700;
+    color: var(--blue);
 }
 
 .menu_line:hover{
-    font-weight: 600;
+    padding: 0 0 0 var(--in_big);   
 }
 
 .content{
@@ -487,7 +457,7 @@ header>a>img{
     width: 100%;
     height: auto;
     min-height: 100vh;
-    padding: var(--in_basic);
+    padding: 96px var(--in_basic) var(--in_basic);
     box-sizing: border-box;    
 }
 
@@ -918,23 +888,6 @@ textarea{
     border-radius: var(--br_basic);
 }
 
-.row,
-.row_txt,
-.row_btns{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
-
-.row_txt > b{
-    margin: 0 24px 0 0;
-}
-
-.row_btns > button{
-    margin: 0 24px 0 0;
-}
-
 .divider{
     width: 100%;
     height: 1px;
@@ -951,10 +904,15 @@ footer{
     flex-wrap: wrap;
     width: 100%;
     height: auto;
-    padding: 48px;
-    margin: 0;
+    margin: 0 auto;
     box-sizing: border-box;
-    background-color: var(--soft_black);
+    background-color: var(--soft_black);    
+    max-width: 1024px;
+    min-height: 64px;
+    padding: 4px var(--in_basic);
+    box-sizing: border-box;
+    border-radius: var(--br_basic) var(--br_basic) 0 0;
+    box-shadow: 0 0 1px rgba(0,0,0,0.8);
 }
 
 @media all and (max-width: 1023px){
@@ -1005,57 +963,35 @@ footer{
         /*transition*/
         --tr_basic: all 0.2s ease-in;
     }
-    
-   
-    .article{
-        width: 100%;
-        max-width: none;
-        margin: 0 0 24px;
-    }
-      
+       
     .content{
         min-height: 60vh;
-        padding: var(--in_medium) 0 0;
+        padding: 64px 0 0;
     }
-    
-    .block,
-    .author_block,
+
     footer{
         padding: 24px 8px;
     }
     
     header{
         height: 48px;
-    }
-    
-    .menu_btn,
-    .menu_btn > div{
-        width: 32px;
+        padding: 0 8px;
     }
     
     .menu_panel{
-        top: 64px;
+        top: 48px;
         height: calc(100vh - 64px);
         padding: 24px 8px 64px;
     }
-    
-    .menu_line,
-    .menu_line_active{
-        font-size: 12pt;
-    }
-    
-    form{
-        width: 100%;
-        margin: 0 0 24px;
-    }
-    
+        
     form label:not(.checkbox){
         margin: 0 0 0 var(--in_tiny);
         background-color: var(--white);
     }
     
     input,
-    select{
+    select,
+    textarea{
         padding: 0 var(--in_tiny);
     }
     

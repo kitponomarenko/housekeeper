@@ -1,5 +1,6 @@
 <?php 
     include 'php/layout/layout_head.php';
+    include 'php/layout/layout_header.php';
     $tenant_id = $content['id'];
     if($content['id'] == $session['user']['id']){
         $self = 1;
@@ -24,4 +25,5 @@
         <?php echo($controls) ?>
     </div>
 </div>
+<?php include('php/layout/layout_footer.php')?>
 <?php include('php/layout/layout_foot.php')?>

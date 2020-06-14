@@ -1,3 +1,26 @@
+$('#menu_btn').click(function(){
+    if ($(this).data("btn_state") == 0){
+        // part that handles style specifics
+        $('.menu_btn>div:nth-child(1)').css('width','70%');
+        $('.menu_btn>div:nth-child(3)').css('width','100%');
+        // part that makes basic operations due to menu opening
+        $('#menu_panel').slideDown(200);
+        $('#menu_panel').css('display','flex');
+        $('html').css('overflow','hidden');
+        $('html').css('width','100%');
+        $(this).data("btn_state","1");
+    } else if ($(this).data("btn_state") == 1){
+        // part that handles style specifics
+        $('.menu_btn>div:nth-child(1)').css('width','100%');
+        $('.menu_btn>div:nth-child(3)').css('width','70%');
+        // part that makes basic operations due to menu closure
+        $('#menu_panel').slideUp(200);
+        $('html').css('overflow','auto');
+        $('html').css('position','static');
+        $(this).data("btn_state","0");
+    }
+});
+
 //----- REQUEST BLOCK -----
 
 function run_method(lib,method,params){

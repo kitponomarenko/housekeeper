@@ -1,6 +1,7 @@
 <?php 
     include 'php/layout/layout_head.php';
     $house_id = $content['id'];
+    include 'php/layout/layout_header.php';
 ?>
 <div class="content">
     <div class="panel" id="reg_panel">
@@ -53,3 +54,4 @@
     </div>
 </div>
 <?php include('php/layout/layout_foot.php')?>
+<?php include('php/layout/layout_footer.php')?>

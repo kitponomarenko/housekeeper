@@ -1,4 +1,5 @@
 <?php include 'php/layout/layout_head.php';         ?>
+<?php include 'php/layout/layout_header.php';         ?>
 <div class="content">
     <div class="panel" id="reg_panel">
         <form data-form_src="tenant">
@@ -46,4 +47,5 @@
         </form>
     </div>
 </div>
+<?php include('php/layout/layout_footer.php')?>
 <?php include('php/layout/layout_foot.php')?>
