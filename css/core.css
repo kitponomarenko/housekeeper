@@ -315,7 +315,7 @@ h3{
 h5{
     font-size: var(--fs_h5);
     font-weight: 700;
-    margin: 0 0 var(--in_small);
+    margin: 0 0 var(--in_basic);
     line-height: var(--lh_tiny);
 }
 
@@ -564,6 +564,43 @@ header>a>img{
 .data_cell:hover,
 .data_cell_active{
     background-color: var(--green);
+}
+
+.poll_card,
+.poll_card_active,
+.poll_card_old{
+    width: 100%;
+    padding: var(--in_basic);
+    background-color: var(--white);
+    color: var(--soft-black);
+    box-sizing: border-box;
+    border-radius: var(--br_basic);
+    margin: 0 0 var(--in_basic);
+    border: 4px solid var(--blue);
+    cursor: pointer;
+}
+
+.poll_card>p,
+.poll_card_active>p,
+.poll_card_old>p{
+    font-weight: 500
+}
+
+.poll_card>p:last-child,
+.poll_card_active>p:last-child,
+.poll_card_old>p:last-child{
+    font-size: var(--fs_tiny);
+    margin: 0;
+}
+
+.poll_card_active{
+    background-color: var(--blue);
+    color: var(--white);
+}
+
+.poll_card_old{
+    background-color: var(--soft_grey);
+    border: 0;
 }
 
 form{

@@ -2,7 +2,7 @@
     include 'php/layout/layout_head.php';
     $house_id = $content['id'];
     
-    $house_data = $content_obj->get_house_data($house_id,'',1);
+    $house_data = $content_obj->get_house_data($house_id,1);
 ?>
 <div class="content">
     <div class="panel" id="house_panel" data-house_id="<?php echo($house_id);?>" data-house_controls="1">                          

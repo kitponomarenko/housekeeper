@@ -162,7 +162,6 @@
         
         function get_house_data(
                 $house_id,
-                $cur_company_id = '',
                 $controls = 0
         ){
             $result = '';
@@ -206,12 +205,16 @@
                 }
             }
             
-            if(!empty($cur_company_id)){
+            $this->user_obj->open_session();
+            $user_id = $_SESSION['id'];
+            $user_role = $_SESSION['role'];
+            
+            if($user_role == 2){
                 if(empty($house_company_id)){
                     $top_controls = '<div class="section">'.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_choose_house','value'=>'Выбрать этот дом']).'</div>';
                     $bottom_controls = $top_controls;
                 }else{
-                    if($cur_company_id == $house_company_id){
+                    if($user_id == $house_company_id){
                         if($controls == 0){
                             $top_controls = '<div class="section">'.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_link','value'=>'Управлять домом','data'=>['link'=>'house?id='.$house_id]]).'</div>';
                         }else{
@@ -220,7 +223,13 @@
                         $bottom_controls = '<div class="section">'.$this->gui_obj->button(['class'=>'btn_border','name'=>'btn_remove_house','value'=>'Удалить с аккаунта']).'</div>';
                     }
                 }
-            }
+            }else if($user_role == 1){
+                $property_query = $this->kernel_obj->get_table('tenant_property',"WHERE tenant_id='$user_id' AND house_id='$house_id' AND confirm='1'");
+                if((!empty($property_query)) && (!empty($house_company_id))){
+                    $top_controls = '<div class="section">'.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_manage_house','value'=>'Управление домом']).'</div>';$safe = 1;
+                } 
+            }           
+            
             
             $result = '
                 <h3>Информация о доме</h3>
@@ -487,7 +496,7 @@
             }
             
             $this->kernel_obj->new_query('house', ['company_id'=>$company_id], "WHERE id='$house_id'");
-            $house_data = $this->get_house_data($house_id, $company_id,$controls);            
+            $house_data = $this->get_house_data($house_id,$controls);            
             
             return [
                     'result' => $result,
@@ -620,41 +629,81 @@
         function get_house_management_panel(
                 $house_id
         ){
-            $house_ads = '';
+            $safe = 0;
             $house_initiatives = '';
             $confirmed_tenants = '';
-            $unconfirmed_tenants = '';
+            $unconfirmed_tenants = ''; 
+            $tenants_block = '';
             
-            $flats_arr = [
-                'confirmed_tenants' => 1,
-                'unconfirmed_tenants' => 0
-            ];
-                    
-            foreach($flats_arr as $key => $val){ 
-                $checked = '';                
-                $flats_query = $this->kernel_obj->get_table('tenant_property',"WHERE house_id='$house_id' AND confirm='$val'",1);
-                while($flat_data = mysqli_fetch_array($flats_query)){
-                    $tenant_id = $flat_data['tenant_id'];
-                    $tenant_data = $this->kernel_obj->get_table('tenant',"WHERE id='$tenant_id'");
-                    $flat_title = 'Квартира №'.$flat_data['flat_num'].' / '.$tenant_data['lastname'].' '.$tenant_data['firstname'];
-                    ${$key} .= $this->gui_obj->checkbox(['name'=>'tenant_confirm_cb','placeholder'=>$flat_title,'data'=>['flat_id'=>$flat_data['id']]],$val);
+            $this->user_obj->open_session();
+            $user_id = $_SESSION['id'];
+            $user_role = $_SESSION['role'];
+            
+            $house_data = $this->kernel_obj->get_table('house',"WHERE id='$house_id'");
+            
+            if($user_role == 2){
+                if($user_id == $house_data['company_id']){
+                    $safe = 2;
+                }
+            }else if($user_role == 1){
+                $property_query = $this->kernel_obj->get_table('tenant_property',"WHERE tenant_id='$user_id' AND house_id='$house_id' AND confirm='1'");
+                if(!empty($property_query)){
+                    $safe = 1;
                 }                
             }
             
-            $result = '
-                <div class="panel" id="house_management_panel">
-                    <h3>Управление домом</h3>
-                    '.$house_ads.'
+            if($safe == 2){
+                $house_initiatives .= '
                     <div class="section">
                         '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_link','value'=>'Инициировать собрание','data'=>['link'=>'create_poll?id='.$house_id]]).'
-                    </div>
-                    '.$house_initiatives.'
+                    </div>';
+                
+                $flats_arr = [
+                    'confirmed_tenants' => 1,
+                    'unconfirmed_tenants' => 0
+                ];
+
+                foreach($flats_arr as $key => $val){ 
+                    $checked = '';                
+                    $flats_query = $this->kernel_obj->get_table('tenant_property',"WHERE house_id='$house_id' AND confirm='$val'",1);
+                    while($flat_data = mysqli_fetch_array($flats_query)){
+                        $tenant_id = $flat_data['tenant_id'];
+                        $tenant_data = $this->kernel_obj->get_table('tenant',"WHERE id='$tenant_id'");
+                        $flat_title = 'Квартира №'.$flat_data['flat_num'].' / '.$tenant_data['lastname'].' '.$tenant_data['firstname'];
+                        ${$key} .= $this->gui_obj->checkbox(['name'=>'tenant_confirm_cb','placeholder'=>$flat_title,'data'=>['flat_id'=>$flat_data['id']]],$val);
+                    }
+                    
+                    $tenants_block = '
                     <div class="section">
+                        <h5>Собственники в доме</h5>
                         '.$this->gui_obj->btn_roll('показать','скрыть','unconfirmed_tenants',['placeholder'=>'Неподтвержденные собственники']).'
                         <div id="unconfirmed_tenants" hidden>'.$unconfirmed_tenants.'</div>
                         '.$this->gui_obj->btn_roll('показать','скрыть','confirmed_tenants',['placeholder'=>'Подтвержденные собственники']).'
                         <div id="confirmed_tenants" hidden>'.$confirmed_tenants.'</div>
+                    </div>';
+                }
+            }
+            
+            if($safe >= 1){
+                $polls = $this->poll_obj->get_actual_polls($house_id);
+                $old_polls = $this->poll_obj->get_old_polls($house_id);
+                $house_initiatives .= '
+                    <div class="section">
+                        '.$polls['active'].'
+                        '.$polls['upcoming'].'
                     </div>
+                    <div class="section">
+                        '.$this->gui_obj->btn_roll('показать','скрыть','old_polls',['placeholder'=>'Старые собрания']).'
+                        <div id="old_polls" hidden>'.$old_polls.'</div>
+                    </div>';      
+                
+            }
+            
+            $result = '
+                <div class="panel" id="house_management_panel">
+                    <h3>Управление домом</h3>                    
+                    '.$house_initiatives.'
+                    '.$tenants_block.'
                 </div>
             ';
             
@@ -665,7 +714,6 @@
                 $flat_id,
                 $tenant_id = ''
         ){
-            $house_ads = '';
             $house_initiatives = '';
             $tenant_tickets = '';
             
@@ -676,11 +724,17 @@
             $flat_data = $this->kernel_obj->get_table('tenant_property',"WHERE id='$flat_id'");
             $house_id = $flat_data['house_id'];
             if($flat_data['confirm'] == 1){
+                $polls = $this->poll_obj->get_actual_polls($house_id);
                 $house_initiatives = '
                     <div class="section">
+                        '.$polls['active'].'
+                        '.$polls['upcoming'].'
+                    </div>
+                    <div class="section">
+                        <h5>Действия</h5>
                         '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_link','value'=>'Инициировать собрание','data'=>['link'=>'create_poll?id='.$house_id]]).'
                         '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_link','value'=>'Предложить инициативу','data'=>['link'=>'initiative']]).'
-                    </div>
+                    </div>                    
                 ';
             }else{
                 $house_initiatives = '
@@ -698,13 +752,12 @@
             $result = '
                 <div class="panel" id="flat_management_panel">
                     <h3>Управление квартирой</h3>
-                    '.$house_ads.'
                     '.$house_initiatives.'
                     <div class="section">
-                        '.$this->gui_obj->button(['class'=>'btn_border','name'=>'btn_link','value'=>'Обращение в УК','data'=>['link'=>'create_ticket']]).'
+                        '.$this->gui_obj->button(['class'=>'btn_border','name'=>'btn_link','value'=>'Обратиться в УК','data'=>['link'=>'create_ticket']]).'
                     </div>                    
                     <div class="section">
-                        '.$this->gui_obj->btn_roll('показать','скрыть','tenant_tickets',['placeholder'=>'Обратиться в УК']).'
+                        '.$this->gui_obj->btn_roll('показать','скрыть','tenant_tickets',['placeholder'=>'Обращения в УК']).'
                         <div id="tenant_tickets" hidden>'.$tenant_tickets.'</div>
                         
                     </div>

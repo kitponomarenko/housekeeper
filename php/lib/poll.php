@@ -118,19 +118,19 @@
             $polls_active = '';
             $polls_upcoming = '';
             
-            $polls_query = $this->kernel_obj->get_table('poll', "WHERE house_id='$house_id' AND state<3 ORDER BY date_start DESC",1);
+            $polls_query = $this->kernel_obj->get_table('poll', "WHERE house_id='$house_id' AND state<3 ORDER BY date_start",1);
             while($poll_data = mysqli_fetch_array($polls_query)){
                 if($poll_data['state'] == 1){
                     $polls_upcoming .= '
-                        <div class="poll_card">
+                        <div class="poll_card" name="btn_link" data-link="poll?id='.$poll_data['id'].'">
                             <p>'.$poll_data['poll_title'].'</p>
                             <p>'.$poll_data['date_start'].'</p>
                         </div>
                     ';
-                }else{
-                    $days_left = $poll_data['days_amount'] - (strtotime('now') - strtotime($poll_data['date_start']))/(60*60*24);
+                }else if($poll_data['state'] == 2){
+                    $days_left = $poll_data['days_amount'] - (strtotime(date('Y-m-d')) - strtotime($poll_data['date_start']))/(60*60*24);
                     $polls_active .= '
-                        <div class="poll_card">
+                        <div class="poll_card_active" name="btn_link" data-link="poll?id='.$poll_data['id'].'">
                             <p>'.$poll_data['poll_title'].'</p>
                             <p>Осталось дней: '.$days_left.'</p>
                         </div>
@@ -138,10 +138,45 @@
                 }
             }
             
+            if(!empty($polls_active)){
+                $polls_active = '<h5>Активные собрания</h5>'.$polls_active;
+            }
+            
+            if(!empty($polls_upcoming)){
+                $polls_upcoming = '<h5>Ближайшие собрания</h5>'.$polls_upcoming;
+            }
+            
             return [
                 'active' => $polls_active,
                 'upcoming' => $polls_upcoming,
             ];
+        }
+        
+        function get_old_polls(
+                $house_id
+        ){
+            $polls_old = '';
+            
+            $polls_query = $this->kernel_obj->get_table('poll', "WHERE house_id='$house_id' AND state=3 ORDER BY date_start",1);
+            while($poll_data = mysqli_fetch_array($polls_query)){
+                $new_date = ($poll_data['days_amount']*(60*60*24)) + strtotime($poll_data['date_start']);
+                $last_date = date('Y-m-d', $new_date);
+                $polls_old .= '
+                    <div class="poll_card_old" name="btn_link" data-link="poll?id='.$poll_data['id'].'">
+                        <p>'.$poll_data['poll_title'].'</p>
+                        <p>Завершено: '.$last_date.'</p>
+                    </div>
+                    ';
+                
+            }          
+
+            return $polls_old;
+        }
+        
+        function get_poll_data(
+                $poll_id
+        ){
+            
         }
     
     }
