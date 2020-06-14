@@ -603,6 +603,48 @@ header>a>img{
     border: 0;
 }
 
+.topic_card{
+    width: 100%;
+    border: 2px solid var(--soft_grey);
+    margin: 0 0 var(--in_basic);
+    padding: var(--in_basic);
+    box-sizing: border-box;
+    border-radius: var(--br_basic);    
+}
+
+.progress_block{
+    margin: 0 0 var(--in_basic);
+}
+
+.progress_block>p{
+    margin: 0 0 4px;
+    font-size: var(--fs_tiny);
+    color: var(--grey);
+}
+
+.progress_bar{
+    background-color: var(--soft_grey);
+    border: 0;
+    height: var(--in_basic);
+    width: 100%;
+    border-radius: var(--br_special);
+}
+
+.progress_bar::-webkit-progress-bar{
+    background-color: var(--soft_grey);
+    border-radius: var(--br_special);
+}
+
+.progress_bar::-webkit-progress-value{
+    background-color: var(--green);
+    border-radius: var(--br_special);
+}
+
+.progress_bar::-moz-progress-bar{
+    background-color: var(--green);
+    border-radius: var(--br_special);
+}
+
 form{
     display: flex;
     flex-direction: column;

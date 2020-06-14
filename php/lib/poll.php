@@ -176,7 +176,203 @@
         function get_poll_data(
                 $poll_id
         ){
+            $poll_description = '';
+            $top_controls = '';
+            $safe = 0;
             
+            $this->user_obj->open_session();
+            $user_id = $_SESSION['id'];
+            $user_role = $_SESSION['role'];
+            $user_tbl = $this->kernel_obj->get_table('user', "WHERE id='$user_role'")['tbl_name'];
+            $poll_data = $this->kernel_obj->get_table('poll', "WHERE id='$poll_id'");
+            $house_id = $poll_data['house_id'];
+            $type_id = $poll_data['type_id'];
+            $house_data = $this->kernel_obj->get_table('house', "WHERE id='$house_id'");
+            $type_data = $this->kernel_obj->get_table('poll_type', "WHERE id='$type_id'");
+            
+            if($user_role == 2){
+                if($user_id == $house_data['company_id']){
+                    $safe = 1;
+                }
+            } if($user_role == 1){
+                $property_data = $this->kernel_obj->get_table('tenant_property',"WHERE tenant_id='$user_id' AND house_id='$house_id' AND confirm='1'");
+                if(!empty($property_data)){
+                    $safe = 2;
+                }
+            }
+            
+            if($safe == 0){
+                header('Location:'.$user_tbl);
+            }
+
+            if($poll_data['state'] == 1){
+                $state = 'готовится';
+            }else if($poll_data['state'] == 2){
+                $state = 'идет';
+            }else if($poll_data['state'] == 3){
+                $state = 'завершен';
+            }
+            
+            if(!empty($poll_data['poll_description'])){
+                $poll_description = '<div><p>Краткое описание</p><p>'.$poll_data['poll_description'].'</p></div>';
+            }
+            $last_date = date('Y-m-d', ($poll_data['days_amount']*(60*60*24)) + strtotime($poll_data['date_start']));
+            
+            if($safe > 0){
+                $topics_check = $this->kernel_obj->get_table('poll_topic', "WHERE poll_id='$poll_id'");
+                if(!empty($topics_check)){
+                    $top_controls = '<div class="section">'.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_get_topics','value'=>'Посмотреть вопросы повестки','data'=>['poll_op'=>0]]).'</div>';
+                    if(($poll_data['state'] == 2) && ($safe == 2)){
+                        $votes_check = $this->kernel_obj->get_table('poll_topic',"WHERE poll_id='$poll_id' AND yes_tenants NOT LIKE '%#$user_id#%' AND no_tenants NOT LIKE '%#$user_id#%' AND hold_tenants NOT LIKE '%#$user_id#%'");
+                        if(!empty($votes_check)){
+                            $top_controls = '<div class="section">'.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_get_topics','value'=>'Участвовать в голосовании','data'=>['poll_op'=>1]]).'</div>';
+                        }
+                    }
+                    $bottom_controls = $top_controls;
+                }
+            }
+            
+            $result = '
+                <h3>Собрание собственников</h3>
+                '.$top_controls.'
+                <div class="section"> 
+                    <div class="data_grid">
+                        <div><p>Адрес</p><p><a href="house?id='.$house_id.'"><u>'.$house_data['adress'].'</u></a></p></div>
+                        <div><p><b>Статус</b></p><p><b>'.$state.'</b></p></div>
+                        <div class="divider"></div>
+                        <div><p>Формат собрания</p><p>'.$type_data['title'].'</p></div>
+                        <div><p><b>Тема собрания</b></p><p><b>'.$poll_data['poll_title'].'</b></p></div>
+                        '.$poll_description.'
+                        <div class="divider"></div>
+                        <div><p>Дата начала</p><p>'.$poll_data['date_start'].'</p></div>    
+                        <div><p>Продолжительность</p><p>'.$poll_data['days_amount'].' дней</p></div>
+                        <div><p>Дата завершения</p><p>'.$last_date.'</p></div>   
+                        <div class="divider"></div>
+                    </div>
+                </div>
+                '.$bottom_controls.'
+            ';
+            
+            return $result;
+        }
+        
+        function get_poll_topics(
+                $poll_id,
+                $poll_op
+        ){
+            $topics_block = '';
+            
+            $poll_data = $this->kernel_obj->get_table('poll', "WHERE id='$poll_id'");
+            $house_id = $poll_data['house_id'];
+            $house_data = $this->kernel_obj->get_table('house', "WHERE id='$house_id'");
+            $topics_query = $this->kernel_obj->get_table('poll_topic',"WHERE poll_id='$poll_id'",1);
+            
+            if($poll_data['state'] == 1){
+                while($topic_data = mysqli_fetch_array($topics_query)){
+                    $topics_block .= '<div class="topic_card">'.$topic_data['topic'].'</div>';
+                }                
+            }else if(($poll_data['state'] == 2) && ($poll_op == 1)){
+                $votes_query = $this->kernel_obj->get_table('poll_topic',"WHERE poll_id='$poll_id' AND yes_tenants NOT LIKE '%#$user_id#%' AND no_tenants NOT LIKE '%#$user_id#%' AND hold_tenants NOT LIKE '%#$user_id#%'",1);
+                $first = 1;
+                while($topic_data = mysqli_fetch_array($votes_query)){
+                    $hidden = 'hidden';
+                    if($first == 1){
+                        $first = 0;
+                        $hidden = '';
+                    }
+                    
+                    $topics_block .= '
+                        <div class="topic_card" '.$hidden.' data-topic_id="'.$topic_data['id'].'">
+                            <p>'.$topic_data['topic'].'</p>
+                            <div class="form_row">
+                                <div>
+                                    '.$this->gui_obj->button(['class'=>'btn_border','name'=>'btn_vote','value'=>'Против','data'=>['vote'=>'no']]).'
+                                </div>
+                                <div>
+                                    '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_vote','value'=>'За','data'=>['vote'=>'yes']]).'
+                                </div>
+                            </div>
+                            '.$this->gui_obj->button(['class'=>'btn_border','name'=>'btn_vote','value'=>'Воздержаться','data'=>['vote'=>'hold']]).'
+                        </div>
+                        ';
+                }
+            }else if(($poll_data['state'] == 3) || (($poll_data['state'] == 2) && ($poll_op == 0))){                
+                while($topic_data = mysqli_fetch_array($topics_query)){
+                    $topics_block .= '<div class="topic_card">
+                        <p>'.$topic_data['topic'].'</p>
+                        <div class="progress_block">
+                            <p>Голоса за: '.$topic_data['yes_votes'].'</p>
+                            <progress class="progress_bar" max="'.$house_data['area_total'].'" value="'.$topic_data['yes_votes'].'"></progress>
+                        </div>
+                        <div class="progress_block">
+                            <p>Голоса против: '.$topic_data['no_votes'].'</p>
+                            <progress class="progress_bar" max="'.$house_data['area_total'].'" value="'.$topic_data['no_votes'].'"></progress>
+                        </div>    
+                        <div class="progress_block">
+                            <p>Воздержались: '.$topic_data['hold_votes'].'</p>
+                            <progress class="progress_bar" max="'.$house_data['area_total'].'" value="'.$topic_data['hold_votes'].'"></progress>
+                        </div>
+                    </div>';
+                    
+                }
+            }
+            
+            $result = '
+                <div class="panel" id="poll_topics_panel">
+                    <h3>Вопросы повестки</h3>                    
+                    '.$topics_block.'
+                </div>
+            ';
+            
+            return $result;
+        }
+        
+        function vote_poll(
+                $topic_id,
+                $vote,
+                $final = 0
+        ){
+            $message = '';
+            $this->user_obj->open_session();
+            $user_id = $_SESSION['id'];
+            
+            $topic_data = $this->kernel_obj->get_table('poll_topic',"WHERE id='$topic_id'");
+            $poll_id = $topic_data['poll_id'];
+            $poll_data = $this->kernel_obj->get_table('poll', "WHERE id='$poll_id'");
+            $house_id = $poll_data['house_id'];
+            
+            $weight = $this->calc_vote($house_id, $user_id);            
+            $vote_weight = $weight['actual']['pt'];
+            
+            $cur_vote = $topic_data[$vote.'_votes'];
+            $new_vote = $cur_vote + $vote_weight;
+            
+            $new_tenants = '';
+            $cur_tenants = $topic_data[$vote.'_tenants'];
+            if(empty($cur_tenants)){
+                $new_tenants = '#'.$user_id.'#';
+            }else{
+                $new_tenants = $cur_tenants.$user_id.'#';
+            }            
+            
+            $query_arr = [
+                $vote.'_votes' => $new_vote,
+                $vote.'_tenants' => $new_tenants
+            ];
+            
+            $update_topic = $this->kernel_obj->new_query('poll_topic', $query_arr,"WHERE id='$topic_id'");
+            
+            if($final == 1){
+                $message = '
+                    <h3>Спасибо за участие в голосовании!</h3>
+                    '.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_show_results','value'=>'Показать результаты']).'
+                ';
+            }
+            
+            return [
+                'result' => $update_topic,
+                'message' => $message
+            ];
         }
     
     }

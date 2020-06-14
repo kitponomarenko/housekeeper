@@ -226,7 +226,8 @@
             }else if($user_role == 1){
                 $property_query = $this->kernel_obj->get_table('tenant_property',"WHERE tenant_id='$user_id' AND house_id='$house_id' AND confirm='1'");
                 if((!empty($property_query)) && (!empty($house_company_id))){
-                    $top_controls = '<div class="section">'.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_manage_house','value'=>'Управление домом']).'</div>';$safe = 1;
+                    $top_controls = '<div class="section">'.$this->gui_obj->button(['class'=>'btn_green','name'=>'btn_manage_house','value'=>'Управление домом']).'</div>';
+                    $safe = 1;
                 } 
             }           
             
